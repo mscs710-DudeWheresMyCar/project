@@ -50,6 +50,18 @@
             <scope>provided</scope>
         </dependency>
         
+        <dependency>
+       <groupId>org.slf4j</groupId>
+       <artifactId>slf4j-api</artifactId>
+       <version>1.7.5</version>
+   </dependency>
+   <dependency>
+       <groupId>org.slf4j</groupId>
+       <artifactId>slf4j-simple</artifactId>
+       <version>1.6.4</version>
+   </dependency>
+        
+        
 		<dependency>
 			<groupId>com.cloudant</groupId>
 			<artifactId>cloudant-client</artifactId>
@@ -65,8 +77,8 @@
 		<dependency>
     		<groupId>org.pacesys</groupId>
     		<artifactId>openstack4j</artifactId>
-    		<version>3.1.0</version>
-    		<scope>test</scope>
+    		<version>3.0.0</version>
+    		<scope>provided</scope>
 		</dependency>
 		
     </dependencies>

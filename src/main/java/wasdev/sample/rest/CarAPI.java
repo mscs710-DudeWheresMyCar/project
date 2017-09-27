@@ -16,7 +16,9 @@
 package wasdev.sample.rest;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.Consumes;
@@ -26,9 +28,11 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Application;
 
-import org.openstack4j.api.OSClient;
 import org.openstack4j.model.common.Identifier;
+import org.openstack4j.model.image.Image;
 import org.openstack4j.model.storage.object.SwiftAccount;
+import org.openstack4j.model.storage.object.SwiftContainer;
+import org.openstack4j.model.storage.object.SwiftObject;
 import org.openstack4j.openstack.OSFactory;
 
 import com.google.gson.Gson;
@@ -41,8 +45,6 @@ import wasdev.sample.store.VisitorStore;
 import wasdev.sample.store.VisitorStoreFactory;
 
 import org.openstack4j.api.OSClient.OSClientV3;
-import org.openstack4j.openstack.OSFactory;
-import org.openstack4j.model.common.Identifier;
 
 
 @ApplicationPath("api")
@@ -158,31 +160,38 @@ public class CarAPI extends Application {
 		JsonArray vcapArray = (JsonArray) jsonObject.get("Object-Storage");
 		JsonObject vcap = (JsonObject) vcapArray.get(0);
 		JsonObject credentials = (JsonObject) vcap.get("credentials");
-		String userId = credentials.get("userId").toString();
-		String password = credentials.get("password").toString();
-		String auth_url = credentials.get("auth_url").toString() + "/v3";
-		String domain = credentials.get("domainName").toString();
-		String project = credentials.get("project").toString();
-		//Identifier domainIdent = Identifier.byName(domain);
-		//Identifier projectIdent = Identifier.byName(project);
-		System.out.println(password);
-    	 
-		
-    	/*OSClientV3 os = OSFactory.builderV3()
+		String userId = credentials.get("userId").toString().replaceAll("\"", "");
+		String password = credentials.get("password").toString().replaceAll("\"", "");
+		String auth_url = credentials.get("auth_url").toString().replaceAll("\"", "") + "/v3";
+		String domain = credentials.get("domainName").toString().replaceAll("\"", "");
+		String project = credentials.get("project").toString().replaceAll("\"", "");
+		Identifier domainIdent = Identifier.byName(domain);
+		Identifier projectIdent = Identifier.byName(project);
+    	OSClientV3 os = OSFactory.builderV3()
     			.endpoint(auth_url)
     			.credentials(userId, password)
     			.scopeToProject(projectIdent,domainIdent)
-    			.authenticate();*/
-    	OSClientV3 os2 = OSFactory.builderV3()
+    			.authenticate();
+    	/*OSClientV3 os2 = OSFactory.builderV3()
                 .endpoint(auth_url)
                 .credentials(userId, password,Identifier.byName(domain))
-                //.scopeToDomain(Identifier.byName(domain))
-                .authenticate();
+                .scopeToDomain(Identifier.byName(domain))
+                .authenticate();*/
 
-    			SwiftAccount account = os2.objectStorage().account().get();
-    			//account.getTemporaryUrlKey();
-    			//List<? extends Image> images = os.images().list();
+    			SwiftAccount account = os.objectStorage().account().get();
     			//System.out.println(account.getTemporaryUrlKey());
+    			List<? extends SwiftContainer> containers = os.objectStorage().containers().list();
+    			System.out.println("Container Name: "+containers.get(0).getName());
+    			System.out.println("Objects in container: "+containers.get(0).getObjectCount());
+    			Iterator<? extends SwiftContainer> it = containers.iterator();
+    			String containerName = it.next().getName();
+    			Map<String, String> md = os.objectStorage().containers().getMetadata(containerName);
+    			List<? extends SwiftObject> objs = os.objectStorage().objects().list(containerName);
+    			System.out.println(objs.get(1).getName());
     }
+    public static void main(String [] args) {
+		CarAPI api = new CarAPI();
+		api.testObjectCon();
+	}
 
 }

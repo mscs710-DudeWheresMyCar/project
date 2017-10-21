@@ -39,5 +39,6 @@
     <orderEntry type="library" name="Maven: com.cloudant:cloudant-http:2.7.0" level="project" />
     <orderEntry type="library" name="Maven: commons-io:commons-io:2.4" level="project" />
     <orderEntry type="library" name="Maven: javax.ws.rs:javax.ws.rs-api:2.0" level="project" />
+    <orderEntry type="library" name="db2jcc" level="project" />
   </component>
 </module>

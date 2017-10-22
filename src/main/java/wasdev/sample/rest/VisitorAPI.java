@@ -29,7 +29,6 @@ import javax.ws.rs.core.Application;
 import wasdev.sample.Visitor;
 import wasdev.sample.store.VisitorStore;
 import wasdev.sample.store.VisitorStoreFactory;
-import wesdev.sample.db2.Db2;
 import application.Testing;
 
 import com.google.gson.Gson;
@@ -40,8 +39,8 @@ public class VisitorAPI extends Application {
 	
 	//Our database store
 	VisitorStore store = VisitorStoreFactory.getInstance();
-	Db2 db = new Db2();
-	Testing tst = new Testing();
+	//Db2 db = new Db2();
+	//Testing tst = new Testing();
   /**
    * Gets all Visitors.
    * REST API example:
@@ -72,8 +71,8 @@ public class VisitorAPI extends Application {
 				names.add(name);
 			}
 		}
-		db.getAll();
-		tst.testApp();
+		//db.getAll();
+		//tst.testApp();
 		return new Gson().toJson(names);
     }
     

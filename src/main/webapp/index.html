@@ -63,7 +63,7 @@
                   if(data.length > 0) {
                     data.forEach(function(element, index) {
                       //data[index] = AntiXSS.sanitizeInput(element) // original
-                      data[index] = element // gg 
+                      data[index] = element // gg deleted AntiXSS
                     });
                     $('#databaseNames').html("Database contents: " + JSON.stringify(data));
                   }

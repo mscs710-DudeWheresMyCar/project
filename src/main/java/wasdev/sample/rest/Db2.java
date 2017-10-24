@@ -10,7 +10,7 @@ public class Db2
 	 * TODO: Create functions and make class more generic
 	 */
 	/*public static void main(String[] args) 
-	{
+	{ 
 		Db2 db = new Db2();
 		db.getAll();
 	}  // End main*/

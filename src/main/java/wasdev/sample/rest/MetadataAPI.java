@@ -4,15 +4,12 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Map;
-
-import com.jmatio.io.*;
-import com.jmatio.types.*;
 public class MetadataAPI {
 
 	public static void main(String[] args) throws FileNotFoundException, IOException {
 		// TODO Auto-generated method stub
 		
-		MatFileReader matfilereader = new MatFileReader("src/main/metadata/cars_meta.mat");
+		//MatFileReader matfilereader = new MatFileReader("src/main/metadata/cars_meta.mat");
 		//Map<String, MLArray> mp = matfilereader.getContent();
 		//Iterator<?> it = mp.entrySet().iterator();
 		//while (it.hasNext()) {
@@ -21,14 +18,14 @@ public class MetadataAPI {
 	    //    //it.remove(); // avoids a ConcurrentModificationException
 	    //}
 		//MLArray mlArrayRetrieved = matfilereader.getMLArray("cell");
-		MLCell mlArray =  (MLCell)  matfilereader.getMLArray("class_names");
-		System.out.println(mlArray.cells());
+		//MLCell mlArray =  (MLCell)  matfilereader.getMLArray("class_names");
+		//System.out.println(mlArray.cells());
 		
-		for (int i = 0; i < mlArray.getSize(); i++){
-			MLChar mlChar = (MLChar) mlArray.get(i);
-			System.out.println(i + " " + mlChar.contentToString());
-			//System.out.print(mlArray.get(i).name); 
-		}
+		//for (int i = 0; i < mlArray.getSize(); i++){
+		//	MLChar mlChar = (MLChar) mlArray.get(i);
+		//	System.out.println(i + " " + mlChar.contentToString());
+			//System.out.print(mlArray.get(i).name);
+		//}
 		//byte[] arr = mlArray.getNameToByteArray();
 		//System.out.println(arr[0]);
 		//System.out.println();

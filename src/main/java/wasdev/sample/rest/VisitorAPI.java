@@ -15,6 +15,7 @@
  *******************************************************************************/ 
 package wasdev.sample.rest;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,11 +27,12 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Application;
 
-import com.google.gson.Gson;
-
 import wasdev.sample.Visitor;
 import wasdev.sample.store.VisitorStore;
 import wasdev.sample.store.VisitorStoreFactory;
+import application.Testing;
+
+import com.google.gson.Gson;
 
 @ApplicationPath("api")
 @Path("/visitors")
@@ -38,7 +40,9 @@ public class VisitorAPI extends Application {
 	
 	//Our database store
 	VisitorStore store = VisitorStoreFactory.getInstance();
-
+	CarAPI cap = new CarAPI();
+	//Db2 db = new Db2();
+	//Testing tst = new Testing();
   /**
    * Gets all Visitors.
    * REST API example:
@@ -51,12 +55,14 @@ public class VisitorAPI extends Application {
    * [ "Bob", "Jane" ]
    * </code>
    * @return A collection of all the Visitors
+ * @throws ClassNotFoundException 
+ * @throws IOException 
    */
     @GET
     @Path("/")
     @Produces({"application/json"})
-    public String getVisitors() {
-		
+    public String getVisitors() throws ClassNotFoundException, IOException {
+    	System.out.println("Visitors");
 		if (store == null) {
 			return "[]";
 		}
@@ -68,6 +74,9 @@ public class VisitorAPI extends Application {
 				names.add(name);
 			}
 		}
+		//db.getAll();
+		//tst.testApp();
+		cap.testObjectCon();
 		return new Gson().toJson(names);
     }
     
@@ -103,7 +112,6 @@ public class VisitorAPI extends Application {
       }
       store.persist(visitor);
       return String.format("Hello %s! I've added you to the database.", visitor.getName());
-
     }
 
 }

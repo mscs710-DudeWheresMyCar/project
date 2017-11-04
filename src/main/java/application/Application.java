@@ -17,5 +17,4 @@ package application;
 
 public class Application {
 	//test
-
 }

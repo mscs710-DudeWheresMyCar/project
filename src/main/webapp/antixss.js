@@ -14,10 +14,12 @@
 * limitations under the License.
 */
 
-"use strict";
-
-class AntiXSS {
-  static sanitizeInput(str) {
-    return String(str).replace(/&(?!amp;|lt;|gt;)/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-  }
-}
+/**
+ * Don't need this for now gg 
+ * "use strict";
+ * class AntiXSS {
+ * static sanitizeInput(str) {
+ * return String(str).replace(/&(?!amp;|lt;|gt;)/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+ * }
+ * }
+*/

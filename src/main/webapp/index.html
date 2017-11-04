@@ -23,6 +23,12 @@
 
         <p id="databaseNames" class="lead text-center"></p>
     </div>
+    <div id="project-container">
+    	<div id="left-menu">
+    		<input id="getAll" type="button" class="form-control" name="GetAll" value="GetAll" />
+    	</div>
+    	<div id="right-output"></div>
+    </div>
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
@@ -56,7 +62,8 @@
               .done(function(data) {
                   if(data.length > 0) {
                     data.forEach(function(element, index) {
-                      data[index] = AntiXSS.sanitizeInput(element)
+                      //data[index] = AntiXSS.sanitizeInput(element) // original
+                      data[index] = element // gg deleted AntiXSS
                     });
                     $('#databaseNames').html("Database contents: " + JSON.stringify(data));
                   }
@@ -65,6 +72,12 @@
           
           //Call getNames on page load.
           getNames();
+          
+          //----------------------------------------------------------
+          	$('#getAll').click(function(){
+          		alert('Clicked');
+          	});
+          //----------------------------------------------------------
           
           
     </script>

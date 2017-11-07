@@ -9,12 +9,6 @@
                   httpPort="9080">
         <tcpOptions soReuseAddr="true"/>
     </httpEndpoint>
-    
-    <!--  
-    <library id="ibmid">
-        <fileset dir="${shared.resource.dir}/lib" includes="*.jar" scanInterval="5s"/>
-    </library>
-	-->
     <application name="GetStartedJava" context-root="/GetStartedJava" location="${appLocation}" type="war" />
 
 </server>

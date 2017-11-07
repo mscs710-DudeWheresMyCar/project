@@ -74,9 +74,10 @@ public class VisitorAPI extends Application {
 				names.add(name);
 			}
 		}
+		names.add(cap.testObjectCon());
 		//db.getAll();
 		//tst.testApp();
-		cap.testObjectCon();
+		//cap.testObjectCon();
 		return new Gson().toJson(names);
     }
     

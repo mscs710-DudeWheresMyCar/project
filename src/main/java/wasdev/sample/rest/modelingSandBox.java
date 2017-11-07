@@ -100,7 +100,7 @@ public class modelingSandBox {
 			// Calculate overall accuracy of current classifier on all splits
 			double accuracy = calculateAccuracy(predictions);
 
-			System.out.println("Accuracy of NaiveBayes model: "+accuracy+"");
+			System.out.println("Accuracy of NaiveBayes model: "+accuracy);
 			
 		
  

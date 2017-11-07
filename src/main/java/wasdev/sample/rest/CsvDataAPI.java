@@ -33,7 +33,7 @@ public class CsvDataAPI {
         try {
             File file=new File(filename);
             BufferedImage image= ImageIO.read(file);
-            output+=file.getName()+",";
+        //    output+=file.getName()+",";
             Raster raster=image.getData();
             int imageHeight=raster.getHeight();
             int imageWidth=raster.getWidth();
@@ -111,7 +111,7 @@ public class CsvDataAPI {
         try {
             BufferedWriter	bw= new BufferedWriter(new FileWriter(new File(outputcsv)));
             //first write out file headers
-            bw.write("filename,");
+          //  bw.write("filename,");
             for(int row=0;row<sections;row++)
             {
                 for(int col=0;col<sections;col++)
@@ -132,17 +132,17 @@ public class CsvDataAPI {
             final File cars = new File(carDir);
             for(final File car : cars.listFiles())
             {
-                bw.write(imageToRow(car.getAbsolutePath(),sections)+"1");
+                bw.write(imageToRow(car.getAbsolutePath(),sections)+"true");
                 bw.newLine();
-                System.out.println("car " + car + " added");
+                System.out.println("car " + car + " added to csvfile");
             }
             //then add rows for the noncars
             final File noncars = new File(noncarDir);
             for(final File noncar : noncars.listFiles())
             {
-                bw.write(imageToRow(noncar.getAbsolutePath(),sections)+"0");
+                bw.write(imageToRow(noncar.getAbsolutePath(),sections)+"false");
                 bw.newLine();
-                System.out.println("car " + noncar + " added");
+                System.out.println("noncar " + noncar + " added to csv file");
             }
             bw.close();
         }

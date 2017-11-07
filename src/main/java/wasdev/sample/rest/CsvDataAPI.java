@@ -7,27 +7,20 @@ import java.awt.image.Raster;
 import java.io.File;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
-import java.io.IOException;
+
 import javax.imageio.ImageIO;
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 
-import weka.classifiers.Classifier;
-import weka.classifiers.Evaluation;
-import weka.classifiers.bayes.NaiveBayes;
-import weka.core.Attribute;
-import weka.core.DenseInstance;
-import weka.core.Instance;
-import weka.core.Instances;
-import weka.core.converters.ConverterUtils.DataSource;
+
 
 @ApplicationPath("api")
 @Path("/csv")
 public class CsvDataAPI {
 	
-	static Instances data=null;
+
 
     /**
      * Takes the filename of a jpeg, and a number of sections
@@ -177,81 +170,8 @@ public class CsvDataAPI {
     public static void main(String args[])
     {
 
-    //    createCSVFromDirectories("C:\\images\\cars","C:\\images\\noncars","C:\\csv\\cars.csv",10);
-    	Classifier classifier= buildClassifier("C:\\csv\\cars.csv");
-    //	instanceFromImage("C:\\images\\noncars\\cat.20.jpg",10);
-    
-        System.out.println("done");
-    }
-    
-
-    public static Classifier buildClassifier(String sourceCSV) 
-    {
-	//	String filepath="C:\\csv\\cars.csv";
-    	try {
-		 DataSource source = new DataSource(sourceCSV);
-		data = source.getDataSet();
-		data.setClassIndex(data.numAttributes() - 1);
-    	NaiveBayes nb = new NaiveBayes();
-
-    	nb.buildClassifier(data);
-    	
-    	
-    
-    	
-    //	double acc=getModelAccuracy(nb,data)
-    //	System.out.println("NaiveBayes built with "+acc+"% accuracy");
-    	
-    	
-    	
-    	return nb;
-    	}
-    	catch(Exception e)
-    	{
-    		System.out.println("error building classifier");
-    		e.printStackTrace();
-    	}
-    	return null;
-    }
-
-
-    public static Instance instanceFromImage(String filename,int sections)
-    {
-    	Instance ins = new DenseInstance(sections*sections*3);
-    	ins.setDataset(data);
-    	String headers="";
-    	String values=imageToRow(filename,sections);
-    	//build headers based on number of sections
-    	
-        for(int row=0;row<sections;row++)
-        {
-            for(int col=0;col<sections;col++)
-            {
-               headers+="red row "+row+" col "+col+",";
-               headers+="green row "+row+" col "+col+",";
-               headers+="blue row "+row+" col "+col+",";
-
-
-            }
-        }
-        String head[]=headers.split(",");
-        String val[]=values.split(",");
-  
-        
-        
-        
-        
-        for(int i=0;i<val.length;i++)
-        {
-        	System.out.println(head[i]+": "+val[i]);
-        System.out.println(Integer.parseInt(val[i]));
-        	System.out.println(new Attribute(head[i]));
-        	
-        	ins.setValue(new Attribute(head[i]),Integer.parseInt(val[i]));
-        }
-
-            
-    	return null;
+        createCSVFromDirectories("C:\\images\\cars","C:\\images\\noncars","C:\\csv\\cars.csv",10);
+    	System.out.println("done");
     }
 
     

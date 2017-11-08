@@ -35,16 +35,16 @@ public class Model {
 
     	Classifier classifier= buildClassifier("C:\\csv\\cars.csv");
     	testAccuracy(classifier,10);
-    	//isFileAPhoto(classifier,"C:\\images\\r1.jpg",10);
-    	isFileAPhoto(classifier,"C:\\images\\noncars\\cat.31.jpg",10);
-    	isFileAPhoto(classifier,"C:\\images\\noncars\\cat.35.jpg",10);
-    	isFileAPhoto(classifier,"C:\\images\\noncars\\cat.32.jpg",10);
-    	isFileAPhoto(classifier,"C:\\images\\noncars\\cat.39.jpg",10);
+    	//isPhotoACar(classifier,"C:\\images\\r1.jpg",10);
+    	isPhotoACar(classifier,"C:\\images\\noncars\\cat.31.jpg",10);
+    	isPhotoACar(classifier,"C:\\images\\noncars\\cat.35.jpg",10);
+    	isPhotoACar(classifier,"C:\\images\\noncars\\cat.32.jpg",10);
+    	isPhotoACar(classifier,"C:\\images\\noncars\\cat.39.jpg",10);
     	
 
     	System.out.println("done");
     }
-    public static boolean isFileAPhoto(Classifier classifier,String filename,int sections)
+    public static boolean isPhotoACar(Classifier classifier,String filename,int sections)
     {
     	Instance ins = instanceFromImage(filename,sections);
     	double result=-1;

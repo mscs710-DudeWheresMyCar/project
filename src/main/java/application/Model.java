@@ -35,17 +35,28 @@ public class Model {
 
     	Classifier classifier= buildClassifier("C:\\csv\\cars.csv");
     	testAccuracy(classifier,10);
-    	//isPhotoACar(classifier,"C:\\images\\r1.jpg",10);
-    	isPhotoACar(classifier,"C:\\images\\noncars\\cat.31.jpg",10);
-    	isPhotoACar(classifier,"C:\\images\\noncars\\cat.35.jpg",10);
-    	isPhotoACar(classifier,"C:\\images\\noncars\\cat.32.jpg",10);
-    	isPhotoACar(classifier,"C:\\images\\noncars\\cat.39.jpg",10);
+   // 	isPhotoACar(classifier,"C:\\images\\r1.jpg",10);
+    	checkDirectory(classifier,"C:\\\\images\\test\\",10);
+
     	
 
     	System.out.println("done");
     }
+    public static void checkDirectory(Classifier classifier,String foldername,int sections)  
+    {
+        final File testDir = new File(foldername);
+        for(final File testImage : testDir.listFiles())
+        {
+        	boolean result = isPhotoACar(classifier,testImage.getAbsolutePath(),10);
+        	System.out.print("we predict that "+testImage+" does");
+        	if(result)
+        	System.out.print(" not");
+        	System.out.println(" contain a car");
+        }
+    }
     public static boolean isPhotoACar(Classifier classifier,String filename,int sections)
     {
+    	
     	Instance ins = instanceFromImage(filename,sections);
     	double result=-1;
     	try {
@@ -58,10 +69,7 @@ public class Model {
     		e.getCause();
     		System.exit(0);;
     	}
-    	System.out.print(filename+" does");
-    	if(result==1)
-    	System.out.print(" not");
-    	System.out.println(" contain a car");
+
     	return result==1;	
 
     }

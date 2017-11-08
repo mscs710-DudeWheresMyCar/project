@@ -35,7 +35,7 @@ public class Model {
 
     	Classifier classifier= buildClassifier("C:\\csv\\cars.csv");
     	testAccuracy(classifier,10);
-    	isFileAPhoto(classifier,"C:\\images\\noncars\\cat.35.jpg",10);
+    	isFileAPhoto(classifier,"C:\\images\\r1.jpg",10);
     	isFileAPhoto(classifier,"C:\\images\\noncars\\cat.31.jpg",10);
     	isFileAPhoto(classifier,"C:\\images\\noncars\\cat.35.jpg",10);
     	isFileAPhoto(classifier,"C:\\images\\noncars\\cat.32.jpg",10);

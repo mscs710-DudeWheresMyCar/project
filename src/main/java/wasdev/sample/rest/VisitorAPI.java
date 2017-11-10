@@ -16,6 +16,7 @@
 package wasdev.sample.rest;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,7 +42,7 @@ public class VisitorAPI extends Application {
 	//Our database store
 	VisitorStore store = VisitorStoreFactory.getInstance();
 	CarAPI cap = new CarAPI();
-	//Db2 db = new Db2();
+	Db2 db = new Db2();
 	//Testing tst = new Testing();
   /**
    * Gets all Visitors.
@@ -61,7 +62,7 @@ public class VisitorAPI extends Application {
     @GET
     @Path("/")
     @Produces({"application/json"})
-    public String getVisitors() throws ClassNotFoundException, IOException {
+    public String getVisitors() throws ClassNotFoundException, IOException, SQLException {
     	System.out.println("Visitors");
 		if (store == null) {
 			return "[]";
@@ -74,7 +75,7 @@ public class VisitorAPI extends Application {
 				names.add(name);
 			}
 		}
-		//db.getAll();
+		db.getAll();
 		//tst.testApp();
 		cap.testObjectCon();
 		return new Gson().toJson(names);

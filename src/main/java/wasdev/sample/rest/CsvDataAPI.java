@@ -38,7 +38,9 @@ public class CsvDataAPI {
         try {
             File file=new File(filename);
             BufferedImage image= ImageIO.read(file);
-            //    output+=file.getName()+",";
+
+        //    output+=file.getName()+",";
+
             Raster raster=image.getData();
             int imageHeight=raster.getHeight();
             int imageWidth=raster.getWidth();
@@ -115,7 +117,9 @@ public class CsvDataAPI {
         try {
             BufferedWriter	bw= new BufferedWriter(new FileWriter(new File(outputcsv)));
             //first write out file headers
-            //  bw.write("filename,");
+
+          //  bw.write("filename,");
+
             for(int row=0;row<sections;row++)
             {
                 for(int col=0;col<sections;col++)

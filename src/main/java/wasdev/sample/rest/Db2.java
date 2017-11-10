@@ -29,10 +29,10 @@ public class Db2
 				url = "jdbc:db2://awh-yp-small02.services.dal.bluemix.net:50001/BLUDB:sslConnection=true";
 				user = "dash111495";
 				password = "#T9Yts@ctXM1";
-				try 
-				{                                                                        
+				try
+				{
 					// Load universal driver
-					Class.forName("com.ibm.db2.jcc.DB2Driver"); 
+					Class.forName("com.ibm.db2.jcc.DB2Driver");
 					// Load specific driver (not used for now)
 					//Class.forName ("COM.ibm.db2.jdbc.app.DB2Driver");
 					System.out.println("**** JDBC driver Loaded");
@@ -87,7 +87,7 @@ public class Db2
 					System.out.println("Exception: " + e);
 					e.printStackTrace();
 				}
-				catch(SQLException ex)                                                   
+				catch(SQLException ex)
 				{
 					System.err.println("SQLException information");
 					while(ex!=null) 

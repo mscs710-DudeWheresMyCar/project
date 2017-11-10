@@ -14,6 +14,7 @@
     <version>1.0-SNAPSHOT</version>
     <packaging>war</packaging>
 
+
     <name>Bluemix Getting Started</name>
     <url>https://bluemix.net</url>
 
@@ -32,17 +33,52 @@
                 <artifactId>geronimo-servlet_3.0_spec</artifactId>
                 <version>1.0</version>
             </dependency>
+            <!-- https://mvnrepository.com/artifact/com.ibm/db2jcc -->
+            <dependency>
+                <groupId>com.ibm</groupId>
+                <artifactId>db2jcc</artifactId>
+                <version>9</version>
+            </dependency>
+            <!-- https://mvnrepository.com/artifact/com.ibm.db2.jcc/db2jcc4 -->
+            <dependency>
+                <groupId>com.ibm.db2.jcc</groupId>
+                <artifactId>db2jcc4</artifactId>
+                <version>10.1</version>
+            </dependency>
+
         </dependencies>
     </dependencyManagement>
 
     <dependencies>
+   <!--     <dependency>
+            <groupId>com.ibm.db2.jcc</groupId>
+            <artifactId>licences</artifactId>
+            <version>1.0</version>
+            <scope>system</scope>
+            <systemPath>target/lib/db2jcc_license_cu.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>com.ibm.db2.jcc</groupId>
+            <artifactId>db2jcc4</artifactId>
+            <version>1.0</version>
+            <scope>system</scope>
+            <systemPath>target/lib/db2jcc4.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>com.ibm.db2.jcc</groupId>
+            <artifactId>db2jcc_javax</artifactId>
+            <version>1.0</version>
+            <scope>system</scope>
+            <systemPath>target/lib/db2jcc_javax.jar</systemPath>
+        </dependency> -->
         <dependency>
             <groupId>org.apache.cxf</groupId>
             <artifactId>cxf-rt-rs-client</artifactId>
             <version>3.1.1</version>
             <scope>test</scope>
         </dependency>
-        
+
+
         <dependency>
             <groupId>org.apache.geronimo.specs</groupId>
             <artifactId>geronimo-servlet_3.0_spec</artifactId>
@@ -79,11 +115,16 @@
 		    <artifactId>jmatio</artifactId>
 		    <version>1.0</version>
 		</dependency>
-		
-		
-		
 
-		<dependency>
+
+
+
+
+
+
+
+
+        <dependency>
     		<groupId>org.pacesys</groupId>
     		<artifactId>openstack4j</artifactId>
     		<version>3.0.0</version>
@@ -122,6 +163,15 @@
                     </bootstrapProperties>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                </configuration>
+            </plugin>
+
         </plugins>
     </build>
 

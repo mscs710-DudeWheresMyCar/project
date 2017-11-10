@@ -1,0 +1,27 @@
+.helloInput {
+  width: 200px;
+}
+
+#test{
+	border: 2px solid red;
+	width: 200px;
+	height: 600px;
+}
+
+#left-menu {
+	border: 2px solid red;
+	width: 220px;
+	height: 600px;
+	float: left;
+}
+#right-output {
+	border: 2px solid blue;
+	width: 600px;
+	height: 600px;
+	float: left;
+}
+
+.form-control {
+	margin: 2px;
+	width: 210px;
+}

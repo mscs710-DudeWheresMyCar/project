@@ -6,6 +6,9 @@ import com.google.gson.Gson;
 
 import java.awt.image.BufferedImage;
 import java.awt.image.Raster;
+import java.io.File;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.io.*;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
@@ -18,9 +21,13 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 
+
+
 @ApplicationPath("api")
 @Path("/csv")
 public class CsvDataAPI {
+	
+
 
     Gson gson = new Gson();
 
@@ -34,9 +41,11 @@ public class CsvDataAPI {
      */
     public static String imageToRow(String filename, int sections)
     {
+    	
         String output="";
         try {
             File file=new File(filename);
+        //    System.out.println(filename);
             BufferedImage image= ImageIO.read(file);
 
         //    output+=file.getName()+",";
@@ -349,4 +358,5 @@ public class CsvDataAPI {
         return outputText;
     }
 
+    
 }

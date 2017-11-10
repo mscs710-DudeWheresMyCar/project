@@ -160,9 +160,6 @@ public class CsvDataAPI {
     /**
      * Used for testing. Creates cars.csv from /cars and /noncars with a 10 x 10 grid
      */
-    @GET
-    @Path("/")
-    @Produces({"application/json"})
     public static void main(String args[])
     {
 

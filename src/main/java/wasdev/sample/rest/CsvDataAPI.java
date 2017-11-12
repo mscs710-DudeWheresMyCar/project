@@ -8,6 +8,8 @@ import java.awt.image.BufferedImage;
 import java.awt.image.Raster;
 import java.io.*;
 import java.net.URL;
+import java.nio.channels.Channels;
+import java.nio.channels.ReadableByteChannel;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -167,7 +169,7 @@ public class CsvDataAPI {
     public static void main(String args[])
     {
 
-        createCSVFromDirectories("C:\\images\\cars","C:\\images\\noncars","C:\\csv\\cars.csv",10);
+        createCSVFromDirectories("E:\\images\\cars_full","E:\\images\\noncars_full","cars.csv",10);
         System.out.println("done");
     }
 
@@ -329,12 +331,67 @@ public class CsvDataAPI {
     }*/
 
     @GET
-    @Path("/")
+    @Path("/create")
     @Produces({"application/json"})
     public String runApi() throws IOException {
         createCSVFromLinks("https://dal.objectstorage.open.softlayer.com/v1/AUTH_d80c340568a44039847b6e7887bbdd93/DefaultProjectthomasginader1maristedu/00010.jpg","https://images-na.ssl-images-amazon.com/images/I/91-850we8RL._SL1500_.jpg","cars.csv",10);
 
         FileReader fr = new FileReader("cars.csv");
+        BufferedReader br = new BufferedReader(fr);
+
+        String line = br.readLine() + "\n";
+        String outputText = line;
+        while (line != null){
+            line = br.readLine();
+            if(line != null)
+                outputText += line + "\n";
+        }
+
+
+        return outputText;
+    }
+
+    @GET
+    @Path("/read")
+    @Produces({"application/json"})
+    public String readCsv() throws IOException {
+        String filename="cars.csv";
+        FileReader fr = new FileReader(filename);
+        BufferedReader br = new BufferedReader(fr);
+
+        String line = br.readLine() + "\n";
+        String outputText = line;
+        while (line != null){
+            line = br.readLine();
+            if(line != null)
+                outputText += line + "\n";
+        }
+
+
+        return outputText;
+    }
+
+    @GET
+    @Path("/download")
+    @Produces({"application/json"})
+    public String downloadAndReadCsv() throws IOException {
+        String url="https://dal.objectstorage.open.softlayer.com/v1/AUTH_d80c340568a44039847b6e7887bbdd93/DefaultProjectthomasginader1maristedu/cars.csv";
+        String filename="cars.csv";
+
+        try{
+            URL download=new URL(url);
+            System.out.println("Downloading csv file");
+            ReadableByteChannel rbc= Channels.newChannel(download.openStream());
+            FileOutputStream fileOut = new FileOutputStream(filename);
+            System.out.println("Finished downloading csv file");
+            fileOut.getChannel().transferFrom(rbc, 0, 1 << 24);
+            fileOut.flush();
+            fileOut.close();
+            rbc.close();
+        }catch(Exception e){ e.printStackTrace(); }
+
+
+        FileReader fr = new FileReader(filename);
         BufferedReader br = new BufferedReader(fr);
 
         String line = br.readLine() + "\n";

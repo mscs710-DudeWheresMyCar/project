@@ -18,6 +18,19 @@
     <name>Bluemix Getting Started</name>
     <url>https://bluemix.net</url>
 
+    <repositories>
+        <repository>
+            <id>db2</id>
+            <name>your custom repo</name>
+            <url>https://artifacts.alfresco.com/nexus/content/repositories/public/</url>
+        </repository>
+        <repository>
+            <id>db2license</id>
+            <name>your custom repo</name>
+            <url>https://maven.atlassian.com/3rdparty/</url>
+        </repository>
+    </repositories>
+
     <licenses>
         <license>
             <name>The Apache Software License, Version 2.0</name>
@@ -29,53 +42,32 @@
     <dependencyManagement>
         <dependencies>
             <dependency>
-                <groupId>org.apache.geronimo.specs</groupId>
-                <artifactId>geronimo-servlet_3.0_spec</artifactId>
-                <version>1.0</version>
-            </dependency>
-            <!-- https://mvnrepository.com/artifact/com.ibm/db2jcc -->
-            <dependency>
-                <groupId>com.ibm</groupId>
-                <artifactId>db2jcc</artifactId>
-                <version>9</version>
-            </dependency>
-            <!-- https://mvnrepository.com/artifact/com.ibm.db2.jcc/db2jcc4 -->
-            <dependency>
-                <groupId>com.ibm.db2.jcc</groupId>
-                <artifactId>db2jcc4</artifactId>
-                <version>10.1</version>
-            </dependency>
-
+            <groupId>org.apache.geronimo.specs</groupId>
+            <artifactId>geronimo-servlet_3.0_spec</artifactId>
+            <version>1.0</version>
+        </dependency>
         </dependencies>
     </dependencyManagement>
 
     <dependencies>
-   <!--     <dependency>
-            <groupId>com.ibm.db2.jcc</groupId>
-            <artifactId>licences</artifactId>
-            <version>1.0</version>
-            <scope>system</scope>
-            <systemPath>target/lib/db2jcc_license_cu.jar</systemPath>
-        </dependency>
         <dependency>
             <groupId>com.ibm.db2.jcc</groupId>
             <artifactId>db2jcc4</artifactId>
-            <version>1.0</version>
-            <scope>system</scope>
-            <systemPath>target/lib/db2jcc4.jar</systemPath>
+            <version>10.1</version>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/com.ibm.db2/db2jcc -->
         <dependency>
-            <groupId>com.ibm.db2.jcc</groupId>
-            <artifactId>db2jcc_javax</artifactId>
-            <version>1.0</version>
-            <scope>system</scope>
-            <systemPath>target/lib/db2jcc_javax.jar</systemPath>
-        </dependency> -->
+            <groupId>com.ibm.db2</groupId>
+            <artifactId>db2jcc</artifactId>
+            <version>8.1</version>
+        </dependency>
+
+
+        <!-- https://mvnrepository.com/artifact/com.ibm.db2/db2jcc_license_cu -->
         <dependency>
-            <groupId>org.apache.cxf</groupId>
-            <artifactId>cxf-rt-rs-client</artifactId>
-            <version>3.1.1</version>
-            <scope>test</scope>
+            <groupId>com.ibm.db2</groupId>
+            <artifactId>db2jcc_license_cu</artifactId>
+            <version>9.7</version>
         </dependency>
 
 
@@ -115,6 +107,13 @@
 		    <artifactId>jmatio</artifactId>
 		    <version>1.0</version>
 		</dependency>
+        <!-- https://mvnrepository.com/artifact/nz.ac.waikato.cms.weka/weka-stable -->
+        <dependency>
+            <groupId>nz.ac.waikato.cms.weka</groupId>
+            <artifactId>weka-stable</artifactId>
+            <version>3.8.0</version>
+        </dependency>
+
 
 
 

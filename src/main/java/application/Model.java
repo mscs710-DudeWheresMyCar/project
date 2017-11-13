@@ -14,26 +14,55 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 
+import com.google.gson.Gson;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import wasdev.sample.rest.CsvDataAPI;
 import weka.classifiers.Classifier;
 import weka.classifiers.Evaluation;
 import weka.classifiers.bayes.NaiveBayes;
 import weka.core.Attribute;
+
 import weka.core.DenseInstance;
 import weka.core.Instance;
 import weka.core.Instances;
 import weka.core.converters.ConverterUtils.DataSource;
 
 
+
+@RestController
 public class Model {
 
     static Instances data=null;
+    Gson gson = new Gson();
 
 
+    @RequestMapping("/model")
+    public String photoCarApi(){
+        String result = "";
+        Classifier classifier = buildClassifier("cars.csv");
+        result = testAccuracy(classifier,10);
+        boolean boolResult =  isPhotoACar(classifier,"https://dal.objectstorage.open.softlayer.com/v1/AUTH_d80c340568a44039847b6e7887bbdd93/DefaultProjectthomasginader1maristedu/00010.jpg",10);
+        result += boolResult;
+
+        return result;
+    }
     public static void main(String args[])
     {
 
-        Classifier classifier= buildClassifier("C:\\csv\\cars.csv");
+        Classifier classifier = buildClassifier("cars.csv");
+        testAccuracy(classifier,10);
+        boolean result =  isPhotoACar(classifier,"https://dal.objectstorage.open.softlayer.com/v1/AUTH_d80c340568a44039847b6e7887bbdd93/DefaultProjectthomasginader1maristedu/00010.jpg",10);
+
+
+
+
+        System.out.println(result);
+    }
+   /* public static void main(String args[])
+    {
+
+        Classifier classifier= buildClassifier("C:\\cars.csv");
         testAccuracy(classifier,10);
         // 	isPhotoACar(classifier,"C:\\images\\r1.jpg",10);
         checkDirectory(classifier,"C:\\\\images\\test\\",10);
@@ -41,7 +70,7 @@ public class Model {
 
 
         System.out.println("done");
-    }
+    }*/
     public static void checkDirectory(Classifier classifier,String foldername,int sections)
     {
         final File testDir = new File(foldername);
@@ -67,15 +96,15 @@ public class Model {
         {
             e.printStackTrace();
             e.getCause();
-            System.exit(0);;
+            System.exit(0);
         }
 
         return result==1;
 
     }
-    public static void testAccuracy(Classifier classifier,int sections)
+    public static String testAccuracy(Classifier classifier,int sections)
     {
-
+        String result = "";
         double actual[] = data.attributeToDoubleArray(sections*sections*3);
         try {
             int truPos=0;
@@ -105,7 +134,6 @@ public class Model {
                     truNeg++;
                 }
             }
-
             System.out.println("True Positive: "+truPos);
             System.out.println("True Negative: "+truNeg);
             System.out.println("False Positive: "+falPos);
@@ -115,6 +143,9 @@ public class Model {
             System.out.println(correct+" correct");
             System.out.println(incorrect+" incorrect");
             System.out.println(100*correct/(correct+incorrect)+"%");
+            result = "True Positive: "+truPos + "\n" + "True Negative: "+truNeg + "\n" + "False Positive: "+falPos +
+                    "\n" + "False Negative: "+falNeg + "\n" + correct+" correct" + "\n" + incorrect+" incorrect" + "\n"
+                    + 100*correct/(correct+incorrect)+"%";
 
         }
         catch(Exception e)
@@ -123,6 +154,7 @@ public class Model {
             e.printStackTrace();
         }
 
+        return result;
 
     }
 
@@ -135,7 +167,6 @@ public class Model {
             data = source.getDataSet();
             data.setClassIndex(data.numAttributes() - 1);
             NaiveBayes nb = new NaiveBayes();
-
             nb.buildClassifier(data);
             Evaluation evaluation = new Evaluation(data);
 
@@ -157,7 +188,8 @@ public class Model {
         Instance ins = new DenseInstance((sections*sections*3)+1);
         ins.setDataset(data);
         String headers="";
-        String values=CsvDataAPI.imageToRow(filename,sections);
+        //String values=CsvDataAPI.imageToRow(filename,sections);
+        String values=CsvDataAPI.imageToRowFromLinks(filename,sections);
         //build headers based on number of sections
 
         for(int row=0;row<sections;row++)

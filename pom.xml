@@ -3,10 +3,9 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>net.wasdev.maven.parent</groupId>
-        <artifactId>java7-parent</artifactId>
-        <version>1.4</version>
-        <relativePath></relativePath>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>1.5.8.RELEASE</version>
     </parent>
 
     <groupId>net.wasdev.wlp.sample</groupId>
@@ -42,25 +41,38 @@
     <dependencyManagement>
         <dependencies>
             <dependency>
-            <groupId>org.apache.geronimo.specs</groupId>
-            <artifactId>geronimo-servlet_3.0_spec</artifactId>
-            <version>1.0</version>
-        </dependency>
+                <groupId>org.apache.geronimo.specs</groupId>
+                <artifactId>geronimo-servlet_3.0_spec</artifactId>
+                <version>1.0</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
     <dependencies>
         <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <dependency>
             <groupId>com.ibm.db2.jcc</groupId>
             <artifactId>db2jcc4</artifactId>
             <version>10.1</version>
         </dependency>
+
         <!-- https://mvnrepository.com/artifact/com.ibm.db2/db2jcc -->
         <dependency>
             <groupId>com.ibm.db2</groupId>
             <artifactId>db2jcc</artifactId>
             <version>8.1</version>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/nz.ac.waikato.cms.weka/weka-stable -->
+        <dependency>
+            <groupId>nz.ac.waikato.cms.weka</groupId>
+            <artifactId>weka-stable</artifactId>
+            <version>3.8.0</version>
+        </dependency>
+
+
 
 
         <!-- https://mvnrepository.com/artifact/com.ibm.db2/db2jcc_license_cu -->
@@ -94,12 +106,14 @@
 			<artifactId>cloudant-client</artifactId>
 			<version>2.7.0</version>
 		</dependency>
-		
-		<dependency>
-		    <groupId>javax.ws.rs</groupId>
-		    <artifactId>javax.ws.rs-api</artifactId>
-		    <version>2.0</version>
-		</dependency>
+
+        <!-- https://mvnrepository.com/artifact/javax.ws.rs/javax.ws.rs-api -->
+        <dependency>
+            <groupId>javax.ws.rs</groupId>
+            <artifactId>javax.ws.rs-api</artifactId>
+            <version>2.1</version>
+        </dependency>
+
 
 		<!-- https://mvnrepository.com/artifact/net.sourceforge.jmatio/jmatio -->
 		<dependency>
@@ -108,11 +122,7 @@
 		    <version>1.0</version>
 		</dependency>
         <!-- https://mvnrepository.com/artifact/nz.ac.waikato.cms.weka/weka-stable -->
-        <dependency>
-            <groupId>nz.ac.waikato.cms.weka</groupId>
-            <artifactId>weka-stable</artifactId>
-            <version>3.8.0</version>
-        </dependency>
+
 
 
 
@@ -149,6 +159,7 @@
                     <artifactId>liberty-maven-plugin</artifactId>
                     <version>1.2.1</version>
                 </plugin>
+
             </plugins>
         </pluginManagement>
         <plugins>
@@ -169,6 +180,10 @@
                     <source>1.8</source>
                     <target>1.8</target>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
 
         </plugins>

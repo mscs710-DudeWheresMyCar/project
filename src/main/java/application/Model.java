@@ -2,32 +2,25 @@ package application;
 
 
 
-import java.awt.image.BufferedImage;
-import java.awt.image.Raster;
+import java.io.BufferedReader;
 import java.io.File;
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
-import javax.imageio.ImageIO;
-import javax.ws.rs.ApplicationPath;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 
+import application.rest.CsvDataAPI;
 import com.google.gson.Gson;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import wasdev.sample.rest.CsvDataAPI;
 import weka.classifiers.Classifier;
 import weka.classifiers.Evaluation;
 import weka.classifiers.bayes.NaiveBayes;
-import weka.core.Attribute;
 
 import weka.core.DenseInstance;
 import weka.core.Instance;
 import weka.core.Instances;
+import weka.core.converters.CSVLoader;
 import weka.core.converters.ConverterUtils.DataSource;
-
+import weka.core.converters.Loader;
 
 
 @RestController
@@ -161,10 +154,15 @@ public class Model {
 
     public static Classifier buildClassifier(String sourceCSV)
     {
+        ClassLoader classloader = Thread.currentThread().getContextClassLoader();
+        InputStream is = classloader.getResourceAsStream("csv/cars.csv");
+        BufferedReader br = new BufferedReader(new InputStreamReader(is));
         //	String filepath="C:\\csv\\cars.csv";
         try {
-            DataSource source = new DataSource(sourceCSV);
-            data = source.getDataSet();
+            //DataSource source = new DataSource(br);
+            CSVLoader loader = new CSVLoader();
+            loader.setSource(is);
+            data = loader.getDataSet();
             data.setClassIndex(data.numAttributes() - 1);
             NaiveBayes nb = new NaiveBayes();
             nb.buildClassifier(data);
@@ -189,7 +187,7 @@ public class Model {
         ins.setDataset(data);
         String headers="";
         //String values=CsvDataAPI.imageToRow(filename,sections);
-        String values=CsvDataAPI.imageToRowFromLinks(filename,sections);
+        String values= CsvDataAPI.imageToRowFromLinks(filename,sections);
         //build headers based on number of sections
 
         for(int row=0;row<sections;row++)

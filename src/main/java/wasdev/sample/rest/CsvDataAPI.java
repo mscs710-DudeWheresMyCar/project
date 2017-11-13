@@ -354,17 +354,19 @@ public class CsvDataAPI {
     @RequestMapping("/read")
     public String readCsv() throws IOException {
         String filename="cars.csv";
+        int count = 0;
         FileReader fr = new FileReader(filename);
 
         BufferedReader br = new BufferedReader(fr);
 
         String line = br.readLine() + "\n";
         String outputText = line;
-        while (line != null){
+        while (count < 100){
             line = br.readLine();
             System.out.println("reading line");
             if(line != null)
                 outputText += line + "\n";
+            count++;
         }
 
 
@@ -395,7 +397,7 @@ public class CsvDataAPI {
 
         String line = br.readLine() + "\n";
         String outputText = line;
-        while (count < 1000){
+        while (count < 100){
             line = br.readLine();
             System.out.println("reading line");
             if(line != null)

@@ -40,7 +40,11 @@ public class VisitorAPI extends Application {
 	
 	//Our database store
 	VisitorStore store = VisitorStoreFactory.getInstance();
-	CarAPI cap = new CarAPI();
+	/**
+	 * Use CarAPI for testing from now on
+	 */
+	//BMConnObject cap = new BMConnObject();
+	
 	//Db2 db = new Db2();
 	//Testing tst = new Testing();
   /**
@@ -74,7 +78,7 @@ public class VisitorAPI extends Application {
 				names.add(name);
 			}
 		}
-		names.add(cap.testObjectCon());
+		//names.add(cap.testObjectCon());
 		//db.getAll();
 		//tst.testApp();
 		//cap.testObjectCon();

@@ -10,6 +10,7 @@ import java.io.InputStreamReader;
 import application.rest.CsvDataAPI;
 import com.google.gson.Gson;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import weka.classifiers.Classifier;
 import weka.classifiers.Evaluation;
@@ -31,11 +32,11 @@ public class Model {
 
 
     @RequestMapping("/model")
-    public String photoCarApi(){
+    public String photoCarApi(@RequestParam(value="url") String photoUrl){
         String result = "";
         Classifier classifier = buildClassifier("cars.csv");
         result = testAccuracy(classifier,10);
-        boolean boolResult =  isPhotoACar(classifier,"https://dal.objectstorage.open.softlayer.com/v1/AUTH_d80c340568a44039847b6e7887bbdd93/DefaultProjectthomasginader1maristedu/00010.jpg",10);
+        boolean boolResult =  isPhotoACar(classifier,photoUrl,10);
         result += boolResult;
 
         return result;

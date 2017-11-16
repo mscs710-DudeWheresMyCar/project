@@ -3,18 +3,25 @@
     <featureManager>
         <feature>webProfile-7.0</feature>
     </featureManager>
+<<<<<<< HEAD
+	 
+=======
 
+>>>>>>> d848415ae645189faa7b96ae7389beec53250b75
     <httpEndpoint id="defaultHttpEndpoint"
                   host="*"
                   httpPort="9080">
         <tcpOptions soReuseAddr="true"/>
     </httpEndpoint>
+<<<<<<< HEAD
+=======
 
     <!--
     <library id="ibmid">
         <fileset dir="${shared.resource.dir}/lib" includes="*.jar" scanInterval="5s"/>
     </library>
 	-->
+>>>>>>> d848415ae645189faa7b96ae7389beec53250b75
     <application name="GetStartedJava" context-root="/GetStartedJava" location="${appLocation}" type="war" />
 
 </server>

@@ -88,8 +88,7 @@
             <artifactId>geronimo-servlet_3.0_spec</artifactId>
             <scope>provided</scope>
         </dependency>
-        
-<<<<<<< HEAD
+
 		<dependency>
     		<groupId>log4j</groupId>
     		<artifactId>log4j</artifactId>
@@ -108,9 +107,7 @@
        <version>1.6.4</version>
    </dependency>
         
-=======
 
->>>>>>> d848415ae645189faa7b96ae7389beec53250b75
         
 		<dependency>
 			<groupId>com.cloudant</groupId>

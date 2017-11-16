@@ -41,17 +41,14 @@ public class VisitorAPI extends Application {
 	
 	//Our database store
 	VisitorStore store = VisitorStoreFactory.getInstance();
-<<<<<<< HEAD
+
 	/**
 	 * Use CarAPI for testing from now on
 	 */
 	//BMConnObject cap = new BMConnObject();
 	
 	//Db2 db = new Db2();
-=======
-	CarAPI cap = new CarAPI();
-	Db2 db = new Db2();
->>>>>>> d848415ae645189faa7b96ae7389beec53250b75
+
 	//Testing tst = new Testing();
   /**
    * Gets all Visitors.
@@ -80,16 +77,13 @@ public class VisitorAPI extends Application {
 		List<String> names = new ArrayList<String>();
 		for (Visitor doc : store.getAll()) {
 			String name = doc.getName();
-			if (name != null){
+			if (name != null) {
 				names.add(name);
 			}
 		}
-<<<<<<< HEAD
 		//names.add(cap.testObjectCon());
 		//db.getAll();
-=======
-		db.getAll();
->>>>>>> d848415ae645189faa7b96ae7389beec53250b75
+
 		//tst.testApp();
 		//cap.testObjectCon();
 		return new Gson().toJson(names);

@@ -46,7 +46,7 @@ public class Model {
 
         Classifier classifier = buildClassifier("cars.csv");
         testAccuracy(classifier,10);
-        boolean result =  isPhotoACar(classifier,"https://dal.objectstorage.open.softlayer.com/v1/AUTH_d80c340568a44039847b6e7887bbdd93/DefaultProjectthomasginader1maristedu/00010.jpg",10);
+        boolean result =  isPhotoACar(classifier,"https://dal.objectstorage.open.softlayer.com/v1/AUTH_d80c340568a44039847b6e7887bbdd93/DefaultProjectthomasginader1maristedu/00011.jpg",10);
 
 
 

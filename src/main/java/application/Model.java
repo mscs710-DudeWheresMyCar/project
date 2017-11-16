@@ -14,28 +14,40 @@ import org.springframework.web.bind.annotation.RestController;
 import weka.classifiers.Classifier;
 import weka.classifiers.Evaluation;
 import weka.classifiers.bayes.NaiveBayes;
-
+import weka.classifiers.functions.MultilayerPerceptron;
+import weka.classifiers.trees.RandomForest;
+import weka.classifiers.trees.J48;
+import weka.classifiers.rules.DecisionTable;
 import weka.core.DenseInstance;
+import weka.core.FastVector;
 import weka.core.Instance;
 import weka.core.Instances;
 import weka.core.converters.CSVLoader;
 import weka.core.converters.ConverterUtils.DataSource;
 import weka.core.converters.Loader;
+import weka.classifiers.evaluation.NominalPrediction;
 
 
 @RestController
 public class Model {
 
     static Instances data=null;
+    static Classifier NaiveBayesClassifier=null;
+    static Classifier RandomForestClassifier=null;
+    static Classifier J48Classifier=null;
+    static Classifier DecisionTableClassifier=null;
+    static Classifier MultilayerPerceptronClassifier=null;
+    
     Gson gson = new Gson();
+    
 
 
     @RequestMapping("/model")
     public String photoCarApi(){
         String result = "";
-        Classifier classifier = buildClassifier("cars.csv");
-        result = testAccuracy(classifier,10);
-        boolean boolResult =  isPhotoACar(classifier,"https://dal.objectstorage.open.softlayer.com/v1/AUTH_d80c340568a44039847b6e7887bbdd93/DefaultProjectthomasginader1maristedu/00010.jpg",10);
+        buildClassifiers("cars.csv");
+        result = ""+checkAccuracy(NaiveBayesClassifier,10);
+        boolean boolResult =  isPhotoACar(NaiveBayesClassifier,"https://dal.objectstorage.open.softlayer.com/v1/AUTH_d80c340568a44039847b6e7887bbdd93/DefaultProjectthomasginader1maristedu/00010.jpg",10);
         result += boolResult;
 
         return result;
@@ -43,39 +55,58 @@ public class Model {
     public static void main(String args[])
     {
 
-        Classifier classifier = buildClassifier("cars.csv");
-        testAccuracy(classifier,10);
-        boolean result =  isPhotoACar(classifier,"https://dal.objectstorage.open.softlayer.com/v1/AUTH_d80c340568a44039847b6e7887bbdd93/DefaultProjectthomasginader1maristedu/00010.jpg",10);
+        buildClassifiers("cars.csv");
 
 
+        // let's check their accuracies
+        System.out.print("NaiveBayes - ");
+        System.out.println(checkAccuracy(new NaiveBayes(),10)+"%");
 
+        System.out.print("RandomForest - ");
+        System.out.println(checkAccuracy(new RandomForest(),10)+"%");
 
-        System.out.println(result);
+        /*
+
+        System.out.print("J48 - ");
+        System.out.println(checkAccuracy(new J48(),10));
+
+        System.out.print("DecisionTable - ");
+        System.out.println(checkAccuracy(new DecisionTable(),10)+"%");
+
+        System.out.print("MultilayerPerceptron - ");
+        System.out.println(checkAccuracy(new MultilayerPerceptron(),10)+"%");
+
+        */
+
+        System.out.println("Is https://dal.objectstorage.open.softlayer.com/v1/AUTH_d80c340568a44039847b6e7887bbdd93/DefaultProjectthomasginader1maristedu/00010.jpg a car? ");
+        if(isPhotoACar(NaiveBayesClassifier,"https://dal.objectstorage.open.softlayer.com/v1/AUTH_d80c340568a44039847b6e7887bbdd93/DefaultProjectthomasginader1maristedu/00010.jpg",10))
+                System.out.println("Naivebayes says yes");
+        else
+            System.out.println("Naivebayes says no");
+
+        if(isPhotoACar(RandomForestClassifier,"https://dal.objectstorage.open.softlayer.com/v1/AUTH_d80c340568a44039847b6e7887bbdd93/DefaultProjectthomasginader1maristedu/00010.jpg",10))
+            System.out.println("RandomForest says yes");
+        else
+             System.out.println("RandomForest says no");
+
+/*
+        if(isPhotoACar(J48Classifier,"https://dal.objectstorage.open.softlayer.com/v1/AUTH_d80c340568a44039847b6e7887bbdd93/DefaultProjectthomasginader1maristedu/00010.jpg",10))
+            System.out.println("J48 says yes");
+        else
+            System.out.println("J48 says no");
+        if(isPhotoACar(DecisionTableClassifier,"https://dal.objectstorage.open.softlayer.com/v1/AUTH_d80c340568a44039847b6e7887bbdd93/DefaultProjectthomasginader1maristedu/00010.jpg",10))
+            System.out.println("DecisionTable says yes");
+        else
+            System.out.println("DecisionTable says no");
+
+        if(isPhotoACar(MultilayerPerceptronClassifier,"https://dal.objectstorage.open.softlayer.com/v1/AUTH_d80c340568a44039847b6e7887bbdd93/DefaultProjectthomasginader1maristedu/00010.jpg",10))
+            System.out.println("MultilayerPerceptron says yes");
+        else
+            System.out.println("MultilayerPerceptron says no");
+            */
+
     }
-   /* public static void main(String args[])
-    {
 
-        Classifier classifier= buildClassifier("C:\\cars.csv");
-        testAccuracy(classifier,10);
-        // 	isPhotoACar(classifier,"C:\\images\\r1.jpg",10);
-        checkDirectory(classifier,"C:\\\\images\\test\\",10);
-
-
-
-        System.out.println("done");
-    }*/
-    public static void checkDirectory(Classifier classifier,String foldername,int sections)
-    {
-        final File testDir = new File(foldername);
-        for(final File testImage : testDir.listFiles())
-        {
-            boolean result = isPhotoACar(classifier,testImage.getAbsolutePath(),10);
-            System.out.print("we predict that "+testImage+" does");
-            if(result)
-                System.out.print(" not");
-            System.out.println(" contain a car");
-        }
-    }
     public static boolean isPhotoACar(Classifier classifier,String filename,int sections)
     {
 
@@ -91,68 +122,55 @@ public class Model {
             e.getCause();
             System.exit(0);
         }
-
+        System.out.println(result);
         return result==1;
 
     }
-    public static String testAccuracy(Classifier classifier,int sections)
+    public static double checkAccuracy(Classifier classifier,int sections)
     {
-        String result = "";
-        double actual[] = data.attributeToDoubleArray(sections*sections*3);
         try {
-            int truPos=0;
-            int falPos=0;
-            int truNeg=0;
-            int falNeg=0;
+            Instances[] trainingSplits = new Instances[10];
+            Instances[] testingSplits = new Instances[10];
+            //relies on static Instances Data which was set previously and should remain constant
+            for (int i = 0; i < 10; i++) {
+                trainingSplits[i] = data.trainCV(10, i);
+                testingSplits[i] = data.testCV(10, i);
 
-            for(int photoNum=0;photoNum<actual.length;photoNum++)
-
-            {
-                double prediction= classifier.classifyInstance(data.get(photoNum));
-                // System.out.println(photoNum+" predicted: "+prediction+" actual: "+actual[photoNum]);
-                if(prediction==1&&actual[photoNum]==1)
-                {
-                    truPos++;
-                }
-                if(prediction==1&&actual[photoNum]==0)
-                {
-                    falPos++;
-                }
-                if(prediction==0&&actual[photoNum]==1)
-                {
-                    falNeg++;
-                }
-                if(prediction==0&&actual[photoNum]==0)
-                {
-                    truNeg++;
-                }
             }
-            System.out.println("True Positive: "+truPos);
-            System.out.println("True Negative: "+truNeg);
-            System.out.println("False Positive: "+falPos);
-            System.out.println("False Negative: "+falNeg);
-            int correct = truPos+truNeg;
-            int incorrect = falNeg+falPos;
-            System.out.println(correct+" correct");
-            System.out.println(incorrect+" incorrect");
-            System.out.println(100*correct/(correct+incorrect)+"%");
-            result = "True Positive: "+truPos + "\n" + "True Negative: "+truNeg + "\n" + "False Positive: "+falPos +
-                    "\n" + "False Negative: "+falNeg + "\n" + correct+" correct" + "\n" + incorrect+" incorrect" + "\n"
-                    + 100*correct/(correct+incorrect)+"%";
+            FastVector predictions = new FastVector();
+            for (int i = 0; i < trainingSplits.length; i++) {
+                // Evaluation validation = classify(classifier, trainingSplits[i], testingSplits[i]);
 
+                Evaluation evaluation = new Evaluation(trainingSplits[i]);
+                classifier.buildClassifier(trainingSplits[i]);
+                evaluation.evaluateModel(classifier, testingSplits[i]);
+                predictions.appendElements(evaluation.predictions());
+            }
+
+
+            // double accuracy = calculateAccuracy(predictions);
+            int correct = 0;
+            for (int i = 0; i < predictions.size(); i++) {
+                NominalPrediction np = (NominalPrediction) predictions.elementAt(i);
+                //	System.out.println("for "+i+" you guessed "+np.predicted()+" and it was "+np.actual());
+                if (np.predicted() == np.actual())
+                    correct++;
+             //   System.out.println(correct + " correct of");
+            }
+
+
+            return correct*100/data.size();
         }
         catch(Exception e)
         {
-            System.out.println("Unable to classify");
             e.printStackTrace();
+            System.out.println("Couldn't check accuracy");
+            return -1;
         }
-
-        return result;
-
     }
 
 
-    public static Classifier buildClassifier(String sourceCSV)
+    public static void buildClassifiers(String sourceCSV)
     {
         ClassLoader classloader = Thread.currentThread().getContextClassLoader();
         InputStream is = classloader.getResourceAsStream("csv/cars.csv");
@@ -164,20 +182,37 @@ public class Model {
             loader.setSource(is);
             data = loader.getDataSet();
             data.setClassIndex(data.numAttributes() - 1);
-            NaiveBayes nb = new NaiveBayes();
-            nb.buildClassifier(data);
-            Evaluation evaluation = new Evaluation(data);
+            //NaiveBayes nb = new NaiveBayes();
+           // RandomForest nb = new RandomForest();
 
-            evaluation.evaluateModel(nb,data);
 
-            return nb;
+            //build the classifiers against data
+            System.out.println("Building NaiveBayes");
+            NaiveBayesClassifier=new NaiveBayes();
+            NaiveBayesClassifier.buildClassifier(data);
+            System.out.println("Building RandomForest");
+            RandomForestClassifier=new RandomForest();
+            RandomForestClassifier.buildClassifier(data);
+            /*
+            System.out.println("Building J48");
+            J48Classifier=new J48();
+            J48Classifier.buildClassifier(data);
+            System.out.println("Building DecisionTable");
+            DecisionTableClassifier=new DecisionTable();
+            DecisionTableClassifier.buildClassifier(data);
+            System.out.println("Building MultilayerPerceptron");
+            MultilayerPerceptronClassifier=new MultilayerPerceptron();
+            MultilayerPerceptronClassifier.buildClassifier(data);
+            */
+
+
         }
         catch(Exception e)
         {
             System.out.println("error building classifier");
             e.printStackTrace();
         }
-        return null;
+
     }
 
 

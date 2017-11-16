@@ -28,6 +28,8 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Application;
 
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import wasdev.sample.Visitor;
 import wasdev.sample.store.VisitorStore;
 import wasdev.sample.store.VisitorStoreFactory;
@@ -35,8 +37,7 @@ import application.Testing;
 
 import com.google.gson.Gson;
 
-@ApplicationPath("api")
-@Path("/visitors")
+@RestController
 public class VisitorAPI extends Application {
 	
 	//Our database store
@@ -65,9 +66,7 @@ public class VisitorAPI extends Application {
  * @throws ClassNotFoundException 
  * @throws IOException 
    */
-    @GET
-    @Path("/")
-    @Produces({"application/json"})
+    @RequestMapping("/api/visitors")
     public String getVisitors() throws ClassNotFoundException, IOException, SQLException {
     	System.out.println("Visitors");
 		if (store == null) {

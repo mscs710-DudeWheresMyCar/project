@@ -29,6 +29,8 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Application;
 
 
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import wasdev.sample.Car;
 import wasdev.sample.Visitor;
 import wasdev.sample.store.VisitorStore;
@@ -37,8 +39,7 @@ import application.Testing;
 
 import com.google.gson.Gson;
 
-@ApplicationPath("api")
-@Path("/cars")
+@RestController
 public class CarAPI extends Application {
 	
 	//Our database store
@@ -64,9 +65,7 @@ public class CarAPI extends Application {
  * @throws ClassNotFoundException 
  * @throws IOException 
    */
-    @GET
-    @Path("/")
-    @Produces({"application/json"})
+  @RequestMapping("/api/cars")
     public String getCars() throws ClassNotFoundException, IOException {
     	System.out.println("Cars");
 		

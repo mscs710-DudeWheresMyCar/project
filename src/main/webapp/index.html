@@ -13,21 +13,44 @@
 </head>
 
 <body>
+	<!--
+	gg this is commented out for now but might be neccesary to test database communication   
     <div class="container">
-        <h1>Welcome Team.</h1>
+        <h1>Hello Team.</h1>
         <div id="nameInput" class="input-group-lg center-block helloInput">
             <p class="lead">What is your name?</p>
             <input id="user_name" type="text" class="form-control" placeholder="name" aria-describedby="sizing-addon1" value="" />
         </div>
         <p id="response" class="lead text-center"></p>
-
+		
         <p id="databaseNames" class="lead text-center"></p>
     </div>
+    -->
     <div id="project-container">
+    	<h1>DudeWheresMyCar</h1>
+    	<div>
+    		<p id='testDbConnection'></p>
+    		<p id='testCars'></p>
+    	</div>
+    	<div id='imageUpload'>
+    	Choose file to upload<br>
+    	<!-- 
+		<form action="./api/cars" method="post" enctype="multipart/form-data">
+			<input name="file" id="filename" type="file" /><br><br>
+			<button name="submit" type="submit">Upload</button>
+		</form>
+		-->
+		<div id='imageFile'>
+			<input name="file" id="filename" type="file" /><br>
+			<button id="sendImg" name="submit" type="submit">Upload</button>
+		</div>
+		</div>
     	<div id="left-menu">
     		<input id="getAll" type="button" class="form-control" name="GetAll" value="GetAll" />
     	</div>
-    	<div id="right-output"></div>
+    	<div id="right-output">
+    		<img src="https://dal.objectstorage.open.softlayer.com/v1/AUTH_d80c340568a44039847b6e7887bbdd93/DefaultProjectthomasginader1maristedu/08136.jpg" alt="Smiley face">
+    	</div>
     </div>
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
@@ -55,6 +78,57 @@
                 });
             }
         });
+    	
+    	//Convert image to base64
+        function getBase64(file) {
+        	   var reader = new FileReader();
+        	   reader.readAsDataURL(file);
+        	   reader.onload = function () {
+        	     console.log(reader.result);
+        	   };
+        	   reader.onerror = function (error) {
+        	     //console.log('Error: ', error);
+        	   };
+        	}
+    	/*
+    	//Sent to CarAPI Rest Call
+        $('#sendImg').click(function(){
+        	var imgElem = $('#filename')[0].files[0];
+        	var imgDataF = JSON.stringify(getBase64(imgElem));
+        	  $.ajax({
+        		method: "POST",  
+        	  	url: "./api/cars",
+        	  	contentType: "application/json",
+        	  	data: JSON.stringify({imgData: imgDataF })
+        	  }).done(function(data) {
+        	    	console.log(data);
+        	   });
+        	});
+    	*/
+      //Sent to CarAPI Rest Call
+        $('#sendImg').click(function(e){
+        	var file = $('#filename')[0].files[0];
+        	var fileName = file.name;
+        	//console.log(file.name);
+        	var reader = new FileReader();
+     	   	reader.readAsDataURL(file);
+     	   	reader.onload = function (){
+     	   		var imgData = reader.result;
+     	    	var genti = "Genti";
+     	    	$.ajax({
+            		method: "POST",  
+            	  	url: "./api/cars",
+            	  	contentType: "application/json",
+            	  	data: JSON.stringify({imgData:imgData,fileName:fileName})
+            	  })
+            	  .done(function(data) {
+            	    	console.log(data);
+            	   });
+     	   	};
+     	   	reader.onerror = function (error) {
+     	     //console.log('Error: ', error);
+     	   	};
+        });
         
         //Retreive all the visitors from the database
         function getNames(){
@@ -65,15 +139,51 @@
                       //data[index] = AntiXSS.sanitizeInput(element) // original
                       data[index] = element // gg deleted AntiXSS
                     });
-                    $('#databaseNames').html("Database contents: " + JSON.stringify(data));
+                    //$('#databaseNames').html("Database contents: " + JSON.stringify(data));// gg original
+                    $('#testDbConnection').html("Testing DB Connection... " + "DB Connection...Success");
+                  }
+                  else
+                  {
+                	  $('#testDbConnection').html("Testing DB Connection... " + "DBConnection...Failed");
+                  }
+              });
+          }
+        
+      //Retreive all the visitors from the database
+        function getCars(){
+          $.get("./api/cars")
+              .done(function(data) {
+                  if(data.length > 0) {
+                    data.forEach(function(element, index) {
+                      //data[index] = AntiXSS.sanitizeInput(element) // original
+                      data[index] = element // gg deleted AntiXSS
+                    });
+                    //$('#databaseNames').html("Database contents: " + JSON.stringify(data));// gg original
+                    $('#testCars').html("Testing Cars: " + JSON.stringify(data));// gg original
+                    $('#testDbConnection').html("Testing DB Connection... " + "DB Connection...Success");
+                  }
+                  else
+                  {
+                	  $('#testDbConnection').html("Testing DB Connection... " + "DBConnection...Failed");
                   }
               });
           }
           
           //Call getNames on page load.
           getNames();
+          getCars();
           
           //----------------------------------------------------------
+          function callFunc(){
+        	  //var selectedFile = document.getElementById('input').files[0]
+        	  var file = $('#filename')[0].files[0];
+        	  getBase64(file); // prints the base64 string
+				if (file){
+  					//console.log(file.name);
+				}
+        	  //console.log($('filename').value());
+        	 //alert($('filename')); 
+          }
           	$('#getAll').click(function(){
           		alert('Clicked');
           	});

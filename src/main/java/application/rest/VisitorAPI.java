@@ -15,26 +15,41 @@
  *******************************************************************************/ 
 package application.rest;
 
-import com.google.gson.Gson;
-import wasdev.sample.Visitor;
-import wasdev.sample.store.VisitorStore;
-import wasdev.sample.store.VisitorStoreFactory;
-
-import javax.ws.rs.*;
-import javax.ws.rs.core.Application;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-@ApplicationPath("api")
-@Path("/visitors")
+import javax.ws.rs.ApplicationPath;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.Application;
+
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import wasdev.sample.Visitor;
+import wasdev.sample.store.VisitorStore;
+import wasdev.sample.store.VisitorStoreFactory;
+import application.Testing;
+
+import com.google.gson.Gson;
+
+@RestController
 public class VisitorAPI extends Application {
 	
 	//Our database store
 	VisitorStore store = VisitorStoreFactory.getInstance();
-	CarAPI cap = new CarAPI();
-	Db2 db = new Db2();
+
+	/**
+	 * Use CarAPI for testing from now on
+	 */
+	//BMConnObject cap = new BMConnObject();
+	
+	//Db2 db = new Db2();
+
 	//Testing tst = new Testing();
   /**
    * Gets all Visitors.
@@ -51,9 +66,7 @@ public class VisitorAPI extends Application {
  * @throws ClassNotFoundException 
  * @throws IOException 
    */
-    @GET
-    @Path("/")
-    @Produces({"application/json"})
+    @RequestMapping("/api/visitors")
     public String getVisitors() throws ClassNotFoundException, IOException, SQLException {
     	System.out.println("Visitors");
 		if (store == null) {
@@ -63,13 +76,15 @@ public class VisitorAPI extends Application {
 		List<String> names = new ArrayList<String>();
 		for (Visitor doc : store.getAll()) {
 			String name = doc.getName();
-			if (name != null){
+			if (name != null) {
 				names.add(name);
 			}
 		}
-		db.getAll();
+		//names.add(cap.testObjectCon());
+		//db.getAll();
+
 		//tst.testApp();
-		cap.testObjectCon();
+		//cap.testObjectCon();
 		return new Gson().toJson(names);
     }
     

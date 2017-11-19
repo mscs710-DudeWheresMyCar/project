@@ -15,6 +15,20 @@
  *******************************************************************************/ 
 package wasdev.sample.rest;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import org.openstack4j.api.OSClient.OSClientV3;
+import org.openstack4j.model.common.DLPayload;
+import org.openstack4j.model.common.Identifier;
+import org.openstack4j.model.storage.object.SwiftContainer;
+import org.openstack4j.model.storage.object.SwiftObject;
+import org.openstack4j.model.storage.object.options.ObjectLocation;
+import org.openstack4j.openstack.OSFactory;
+
+import javax.imageio.ImageIO;
+import javax.swing.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -25,24 +39,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-
-import javax.imageio.ImageIO;
-import javax.swing.ImageIcon;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import org.openstack4j.model.common.DLPayload;
-import org.openstack4j.model.common.Identifier;
-import org.openstack4j.model.storage.object.SwiftContainer;
-import org.openstack4j.model.storage.object.SwiftObject;
-import org.openstack4j.model.storage.object.options.ObjectLocation;
-import org.openstack4j.openstack.OSFactory;
-
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-
-import org.openstack4j.api.OSClient.OSClientV3;
 
 public class CarAPI {
 	/************Fields*************/

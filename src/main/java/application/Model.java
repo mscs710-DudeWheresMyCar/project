@@ -26,10 +26,12 @@ import weka.core.converters.CSVLoader;
 import weka.core.converters.ConverterUtils.DataSource;
 import weka.core.converters.Loader;
 import weka.classifiers.evaluation.NominalPrediction;
+import org.springframework.web.bind.annotation.RequestParam;
 
 
 @RestController
 public class Model {
+
 
     static Instances data=null;
     static Classifier NaiveBayesClassifier=null;
@@ -37,9 +39,16 @@ public class Model {
     static Classifier J48Classifier=null;
     static Classifier DecisionTableClassifier=null;
     static Classifier MultilayerPerceptronClassifier=null;
+
     
     Gson gson = new Gson();
-    
+
+    @RequestMapping("/classify")
+    public String photoClassifyApi(@RequestParam(value="url") String photoUrl)
+    {
+        return "Is "+photoUrl+" a car?"
+                +isPhotoACar(photoUrl);
+    }
 
 
     @RequestMapping("/model")
@@ -47,8 +56,8 @@ public class Model {
         String result = "";
         buildClassifiers("cars.csv");
         result = ""+checkAccuracy(NaiveBayesClassifier,10);
-        boolean boolResult =  isPhotoACar(NaiveBayesClassifier,"https://dal.objectstorage.open.softlayer.com/v1/AUTH_d80c340568a44039847b6e7887bbdd93/DefaultProjectthomasginader1maristedu/00010.jpg",10);
-        result += boolResult;
+        double boolResult =  isPhotoACar(NaiveBayesClassifier,"https://dal.objectstorage.open.softlayer.com/v1/AUTH_d80c340568a44039847b6e7887bbdd93/DefaultProjectthomasginader1maristedu/00010.jpg",10);
+        result += boolResult==1;
 
         return result;
     }
@@ -56,59 +65,115 @@ public class Model {
     {
 
         buildClassifiers("cars.csv");
+        System.out.println(isPhotoACar("https://dal.objectstorage.open.softlayer.com/v1/AUTH_d80c340568a44039847b6e7887bbdd93/DefaultProjectthomasginader1maristedu/00010.jpg"));
 
 
-        // let's check their accuracies
-        System.out.print("NaiveBayes - ");
-        System.out.println(checkAccuracy(new NaiveBayes(),10)+"%");
 
-        System.out.print("RandomForest - ");
-        System.out.println(checkAccuracy(new RandomForest(),10)+"%");
-
-        /*
-
-        System.out.print("J48 - ");
-        System.out.println(checkAccuracy(new J48(),10));
-
-        System.out.print("DecisionTable - ");
-        System.out.println(checkAccuracy(new DecisionTable(),10)+"%");
-
-        System.out.print("MultilayerPerceptron - ");
-        System.out.println(checkAccuracy(new MultilayerPerceptron(),10)+"%");
-
-        */
-
-        System.out.println("Is https://dal.objectstorage.open.softlayer.com/v1/AUTH_d80c340568a44039847b6e7887bbdd93/DefaultProjectthomasginader1maristedu/00010.jpg a car? ");
-        if(isPhotoACar(NaiveBayesClassifier,"https://dal.objectstorage.open.softlayer.com/v1/AUTH_d80c340568a44039847b6e7887bbdd93/DefaultProjectthomasginader1maristedu/00010.jpg",10))
-                System.out.println("Naivebayes says yes");
+    }
+    public static String isPhotoACar(String filename)
+    {
+        String output="";
+        int stackTrue=0;
+        int stackFalse=0;
+        double nbRes=isPhotoACar(NaiveBayesClassifier,filename,10);
+        if(nbRes==-1)
+            output+="NaiveBayes model not yet initialized, please check back later ";
+        else if(nbRes==0) {
+            output += "NaiveBayes - False";
+            stackFalse++;
+        }
+        else if(nbRes==1) {
+            output += "NaiveBayes - True";
+            stackTrue++;
+        }
         else
-            System.out.println("Naivebayes says no");
+            output+="Unexpected value returned by NaiveBayes Classifier!";
 
-        if(isPhotoACar(RandomForestClassifier,"https://dal.objectstorage.open.softlayer.com/v1/AUTH_d80c340568a44039847b6e7887bbdd93/DefaultProjectthomasginader1maristedu/00010.jpg",10))
-            System.out.println("RandomForest says yes");
-        else
-             System.out.println("RandomForest says no");
+        output+="\n  ";
 
-/*
-        if(isPhotoACar(J48Classifier,"https://dal.objectstorage.open.softlayer.com/v1/AUTH_d80c340568a44039847b6e7887bbdd93/DefaultProjectthomasginader1maristedu/00010.jpg",10))
-            System.out.println("J48 says yes");
+        double rfRes=isPhotoACar(RandomForestClassifier,filename,10);
+        if(rfRes==-1)
+            output+="RandomForest model not yet initialized, please check back later \n";
+        else if(rfRes==0) {
+            output += "RandomForest - False";
+            stackFalse++;
+        }
+        else if(rfRes==1) {
+            output += "RandomForest - True";
+            stackTrue++;
+        }
         else
-            System.out.println("J48 says no");
-        if(isPhotoACar(DecisionTableClassifier,"https://dal.objectstorage.open.softlayer.com/v1/AUTH_d80c340568a44039847b6e7887bbdd93/DefaultProjectthomasginader1maristedu/00010.jpg",10))
-            System.out.println("DecisionTable says yes");
-        else
-            System.out.println("DecisionTable says no");
+            output+="Unexpected value returned by RandomForest Classifier!";
 
-        if(isPhotoACar(MultilayerPerceptronClassifier,"https://dal.objectstorage.open.softlayer.com/v1/AUTH_d80c340568a44039847b6e7887bbdd93/DefaultProjectthomasginader1maristedu/00010.jpg",10))
-            System.out.println("MultilayerPerceptron says yes");
+        output+="\n  ";
+
+        double j48Res=isPhotoACar(J48Classifier,filename,10);
+        if(j48Res==-1)
+            output+="J48 model not yet initialized, please check back later \n";
+        else if(j48Res==0) {
+            output += "J48 - False";
+            stackFalse++;
+        }
+        else if(j48Res==1) {
+            output += "J48 - True";
+            stackTrue++;
+        }
         else
-            System.out.println("MultilayerPerceptron says no");
-            */
+            output+="Unexpected value returned by J48 Classifier!";
+
+        output+="\n  ";
+
+        double dtRes=isPhotoACar(DecisionTableClassifier,filename,10);
+        if(dtRes==-1)
+            output+="DecisionTable model not yet initialized, please check back later \n";
+        else if(dtRes==0) {
+            output += "DecisionTable - False";
+            stackFalse++;
+        }
+        else if(dtRes==1) {
+            output += "DecisionTable - True";
+            stackTrue++;
+        }
+        else
+            output+="Unexpected value returned by DecisionTable Classifier!";
+
+        output+="\n  ";
+
+        double mpRes=isPhotoACar(MultilayerPerceptronClassifier,filename,10);
+        if(mpRes==-1)
+            output+="MultilayerPerceptron model not yet initialized, please check back later \n";
+        else if(mpRes==0) {
+            output += "MultilayerPerceptron - False";
+            stackFalse++;
+        }
+        else if(mpRes==1) {
+            output += "MultilayerPerceptron - True";
+            stackTrue++;
+        }
+        else
+            output+="Unexpected value returned by MultilayerPerceptron Classifier!";
+
+        output+="\n  ";
+        if(stackTrue+stackFalse==0)
+            output+="No classifiers available for stacking";
+        else if(stackTrue==stackFalse)
+            output+="Stacking - True   (tie)";
+        else if(stackTrue>stackFalse)
+            output+="Stacking - True";
+        else
+            output+="Stacking - False";
+        return output;
+
+
 
     }
 
-    public static boolean isPhotoACar(Classifier classifier,String filename,int sections)
+    public static double isPhotoACar(Classifier classifier,String filename,int sections)
     {
+        if(classifier==null)
+        {
+            return -1;
+        }
 
         Instance ins = instanceFromImage(filename,sections);
         double result=-1;
@@ -123,11 +188,12 @@ public class Model {
             System.exit(0);
         }
         System.out.println(result);
-        return result==1;
+        return result;
 
     }
     public static double checkAccuracy(Classifier classifier,int sections)
     {
+
         try {
             Instances[] trainingSplits = new Instances[10];
             Instances[] testingSplits = new Instances[10];
@@ -187,23 +253,32 @@ public class Model {
 
 
             //build the classifiers against data
+            //use temp variable to not overwrite the usable static classifier until available
             System.out.println("Building NaiveBayes");
-            NaiveBayesClassifier=new NaiveBayes();
-            NaiveBayesClassifier.buildClassifier(data);
+            NaiveBayes NaiveBayesClassifierTemp=new NaiveBayes();
+            NaiveBayesClassifierTemp.buildClassifier(data);
+            NaiveBayesClassifier=NaiveBayesClassifierTemp;
+
             System.out.println("Building RandomForest");
-            RandomForestClassifier=new RandomForest();
-            RandomForestClassifier.buildClassifier(data);
-            /*
+            RandomForest RandomForestClassifierTemp=new RandomForest();
+            RandomForestClassifierTemp.buildClassifier(data);
+            RandomForestClassifier=RandomForestClassifierTemp;
+
             System.out.println("Building J48");
-            J48Classifier=new J48();
-            J48Classifier.buildClassifier(data);
+            J48 J48ClassifierTemp=new J48();
+            J48ClassifierTemp.buildClassifier(data);
+            J48Classifier=J48ClassifierTemp;
+
             System.out.println("Building DecisionTable");
-            DecisionTableClassifier=new DecisionTable();
-            DecisionTableClassifier.buildClassifier(data);
+            DecisionTable DecisionTableClassifierTemp=new DecisionTable();
+            DecisionTableClassifierTemp.buildClassifier(data);
+            DecisionTableClassifier=DecisionTableClassifierTemp;
+
             System.out.println("Building MultilayerPerceptron");
-            MultilayerPerceptronClassifier=new MultilayerPerceptron();
-            MultilayerPerceptronClassifier.buildClassifier(data);
-            */
+            MultilayerPerceptron MultilayerPerceptronClassifierTemp=new MultilayerPerceptron();
+            MultilayerPerceptronClassifierTemp.buildClassifier(data);
+            MultilayerPerceptronClassifier=MultilayerPerceptronClassifierTemp;
+
 
 
         }
@@ -246,11 +321,7 @@ public class Model {
 
         for(int i=0;i<val.length;i++)
         {
-            // 	System.out.println(head[i]+": "+val[i]);
-            // System.out.println(Integer.parseInt(val[i]));
-            // 	System.out.println(new Attribute(head[i]));
 
-            //ins.setValue(new Attribute(head[i]),Integer.parseInt(val[i]));
             ins.setValue(i,Integer.parseInt(val[i]));
         }
 

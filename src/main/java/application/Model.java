@@ -46,9 +46,11 @@ public class Model {
     @RequestMapping("/classify")
     public String photoClassifyApi(@RequestParam(value="url") String photoUrl)
     {
-        return "Is "+photoUrl+" a car?"
-                +isPhotoACar(photoUrl);
+        return ("Is "+photoUrl+" a car? \n "
+                +isPhotoACar(photoUrl)).replaceAll("\n","<br>");
     }
+
+
 
 
     @RequestMapping("/model")
@@ -63,15 +65,18 @@ public class Model {
     }
     public static void main(String args[])
     {
+        Model model = new Model();
 
-        buildClassifiers("cars.csv");
-        System.out.println(isPhotoACar("https://dal.objectstorage.open.softlayer.com/v1/AUTH_d80c340568a44039847b6e7887bbdd93/DefaultProjectthomasginader1maristedu/00010.jpg"));
+        model.buildClassifiers("cars.csv");
+        System.out.println(model.isPhotoACar("https://dal.objectstorage.open.softlayer.com/v1/AUTH_d80c340568a44039847b6e7887bbdd93/DefaultProjectthomasginader1maristedu/00010.jpg"));
 
 
 
     }
-    public static String isPhotoACar(String filename)
+    public String isPhotoACar(String filename)
     {
+        if (filename==null)
+            return "Error couldn't read input image";
         String output="";
         int stackTrue=0;
         int stackFalse=0;
@@ -168,7 +173,7 @@ public class Model {
 
     }
 
-    public static double isPhotoACar(Classifier classifier,String filename,int sections)
+    public double isPhotoACar(Classifier classifier,String filename,int sections)
     {
         if(classifier==null)
         {
@@ -178,7 +183,10 @@ public class Model {
         Instance ins = instanceFromImage(filename,sections);
         double result=-1;
         try {
-
+            if (ins==null) {
+                System.out.println("!!!!no instance for image compare, serious error!!!!");
+                return -3;
+            }
             result=classifier.classifyInstance(ins);
         }
         catch(Exception e)
@@ -187,12 +195,54 @@ public class Model {
             e.getCause();
             System.exit(0);
         }
-        System.out.println(result);
+       // System.out.println(result);
         return result;
 
     }
-    public static double checkAccuracy(Classifier classifier,int sections)
+
+    @RequestMapping("/accuracy")
+    public String checkAccuracy()
     {
+        String output="";
+        double accuracy;
+        output+="NaiveBayes - ";
+        accuracy = checkAccuracy(NaiveBayesClassifier,10);
+        if(accuracy==-1)
+            output+="model not yet initialized. \n ";
+        else
+            output+=accuracy+"%. \n ";
+        output+="RandomForest - ";
+        accuracy = checkAccuracy(RandomForestClassifier,10);
+        if(accuracy==-1)
+            output+="model not yet initialized. \n ";
+        else
+            output+=accuracy+"%. \n ";
+        output+="J48 - ";
+        accuracy = checkAccuracy(J48Classifier,10);
+        if(accuracy==-1)
+            output+="model not yet initialized. \n ";
+        else
+            output+=accuracy+"%. \n ";
+        output+="DecisionTable - ";
+        accuracy = checkAccuracy(DecisionTableClassifier,10);
+        if(accuracy==-1)
+            output+="model not yet initialized. \n ";
+        else
+            output+=accuracy+"%. \n ";
+        output+="MultilayerPerceptron - ";
+        accuracy = checkAccuracy(MultilayerPerceptronClassifier,10);
+        if(accuracy==-1)
+            output+="model not yet initialized. \n ";
+        else
+            output+=accuracy+"%. \n ";
+        return output.replaceAll("\n","<br>");
+
+    }
+
+    public double checkAccuracy(Classifier classifier,int sections)
+    {
+        if (classifier==null)
+            return -1;
 
         try {
             Instances[] trainingSplits = new Instances[10];
@@ -291,7 +341,7 @@ public class Model {
     }
 
 
-    public static Instance instanceFromImage(String filename,int sections)
+    public Instance instanceFromImage(String filename,int sections)
     {
         Instance ins = new DenseInstance((sections*sections*3)+1);
         ins.setDataset(data);

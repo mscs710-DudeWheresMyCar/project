@@ -3,7 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="e524ad99-4260-4fda-be62-3a4438d6d164" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/application/Application.java" afterPath="$PROJECT_DIR$/src/main/java/application/Application.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/application/Model.java" afterPath="$PROJECT_DIR$/src/main/java/application/Model.java" />
     </list>
     <ignored path="$PROJECT_DIR$/target/" />
@@ -19,8 +18,8 @@
       <file leaf-file-name="Model.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/application/Model.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="329">
-              <caret line="67" column="173" lean-forward="true" selection-start-line="67" selection-start-column="40" selection-end-line="67" selection-end-column="173" />
+            <state relative-caret-position="360">
+              <caret line="70" column="7" lean-forward="false" selection-start-line="70" selection-start-column="7" selection-end-line="70" selection-end-column="7" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -56,6 +55,7 @@
       <find>multi</find>
       <find>data</find>
       <find>NaiveBayesClass</find>
+      <find>system.out.</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -413,7 +413,14 @@
       <option name="project" value="LOCAL" />
       <updated>1510804240862</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="Added stacking and support for classifiers to be created at launch time">
+      <created>1511060365742</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1511060365742</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
@@ -424,7 +431,7 @@
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32894737" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32894737" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Palette&#9;" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Image Layers" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -464,7 +471,8 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Aed Susupport for multiple classifying models" />
-    <option name="LAST_COMMIT_MESSAGE" value="Aed Susupport for multiple classifying models" />
+    <MESSAGE value="Added stacking and support for classifiers to be created at launch time" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added stacking and support for classifiers to be created at launch time" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -799,8 +807,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/application/Model.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="329">
-          <caret line="67" column="173" lean-forward="true" selection-start-line="67" selection-start-column="40" selection-end-line="67" selection-end-column="173" />
+        <state relative-caret-position="360">
+          <caret line="70" column="7" lean-forward="false" selection-start-line="70" selection-start-column="7" selection-end-line="70" selection-end-column="7" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>

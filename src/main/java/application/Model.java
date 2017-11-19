@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import weka.classifiers.Classifier;
 import weka.classifiers.Evaluation;
 import weka.classifiers.bayes.NaiveBayes;
-import weka.classifiers.functions.MultilayerPerceptron;
+import weka.classifiers.functions.Logistic;
 import weka.classifiers.trees.RandomForest;
 import weka.classifiers.trees.J48;
 import weka.classifiers.rules.DecisionTable;
@@ -38,7 +38,7 @@ public class Model {
     static Classifier RandomForestClassifier=null;
     static Classifier J48Classifier=null;
     static Classifier DecisionTableClassifier=null;
-    static Classifier MultilayerPerceptronClassifier=null;
+    static Classifier LogisticClassifier=null;
 
     
     Gson gson = new Gson();
@@ -83,8 +83,15 @@ public class Model {
         Model model = new Model();
 
         model.buildClassifiers("cars.csv");
-        System.out.println(model.isPhotoACar("https://dal.objectstorage.open.softlayer.com/v1/AUTH_d80c340568a44039847b6e7887bbdd93/DefaultProjectthomasginader1maristedu/00010.jpg"));
-
+      //  System.out.println(model.isPhotoACar("https://dal.objectstorage.open.softlayer.com/v1/AUTH_d80c340568a44039847b6e7887bbdd93/DefaultProjectthomasginader1maristedu/00010.jpg"));
+       try{
+        System.out.println("Multilayer perceptron accuracy: "+model.checkAccuracy(new Logistic(),10)+"%");
+       }
+       catch(Exception e)
+       {
+           System.out.println("Couldn't build MLP for accuracy testing");
+           e.printStackTrace();
+       }
 
 
     }
@@ -159,19 +166,19 @@ public class Model {
 
         output+="\n  ";
 
-        double mpRes=isPhotoACar(MultilayerPerceptronClassifier,filename,10);
-        if(mpRes==-1)
-            output+="MultilayerPerceptron model not yet initialized, please check back later \n";
-        else if(mpRes==0) {
-            output += "MultilayerPerceptron - False";
+        double loRes=isPhotoACar(LogisticClassifier,filename,10);
+        if(loRes==-1)
+            output+="Logistic model not yet initialized, please check back later \n";
+        else if(loRes==0) {
+            output += "Logistic - False";
             stackFalse++;
         }
-        else if(mpRes==1) {
-            output += "MultilayerPerceptron - True";
+        else if(loRes==1) {
+            output += "Logistic - True";
             stackTrue++;
         }
         else
-            output+="Unexpected value returned by MultilayerPerceptron Classifier!";
+            output+="Unexpected value returned by Logistic Classifier!";
 
         output+="\n  ";
         if(stackTrue+stackFalse==0)
@@ -242,11 +249,11 @@ public class Model {
                 output += "model not yet initialized. \n ";
             else
                 output += checkAccuracy(DecisionTable.makeCopy(DecisionTableClassifier), 10) + "%. \n ";
-            output += "MultilayerPerceptron - ";
-            if (MultilayerPerceptronClassifier == null)
+            output += "Logistic - ";
+            if (LogisticClassifier == null)
                 output += "model not yet initialized. \n ";
             else
-                output += checkAccuracy(MultilayerPerceptron.makeCopy(MultilayerPerceptronClassifier), 10) + "%. \n ";
+                output += checkAccuracy(Logistic.makeCopy(LogisticClassifier), 10) + "%. \n ";
 
 
             return output.replaceAll("\n", "<br>");
@@ -344,10 +351,10 @@ public class Model {
             DecisionTableClassifierTemp.buildClassifier(data);
             DecisionTableClassifier=DecisionTableClassifierTemp;
 
-            System.out.println("Building MultilayerPerceptron");
-            MultilayerPerceptron MultilayerPerceptronClassifierTemp=new MultilayerPerceptron();
-            MultilayerPerceptronClassifierTemp.buildClassifier(data);
-            MultilayerPerceptronClassifier=MultilayerPerceptronClassifierTemp;
+            System.out.println("Building Logistic");
+            Logistic LogisticClassifierTemp=new Logistic();
+            LogisticClassifierTemp.buildClassifier(data);
+            LogisticClassifier=LogisticClassifierTemp;
             System.out.println("All classifers built");
 
 

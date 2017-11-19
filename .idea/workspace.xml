@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="e524ad99-4260-4fda-be62-3a4438d6d164" name="Default" comment="Display image while performing classification">
+    <list default="true" id="e524ad99-4260-4fda-be62-3a4438d6d164" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/application/Model.java" afterPath="$PROJECT_DIR$/src/main/java/application/Model.java" />
     </list>
@@ -18,8 +18,8 @@
       <file leaf-file-name="Model.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/application/Model.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="141">
-              <caret line="49" column="19" lean-forward="false" selection-start-line="49" selection-start-column="19" selection-end-line="49" selection-end-column="19" />
+            <state relative-caret-position="160">
+              <caret line="355" column="34" lean-forward="false" selection-start-line="355" selection-start-column="32" selection-end-line="355" selection-end-column="34" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -56,6 +56,7 @@
       <find>data</find>
       <find>NaiveBayesClass</find>
       <find>system.out.</find>
+      <find>mp</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -427,7 +428,14 @@
       <option name="project" value="LOCAL" />
       <updated>1511062757130</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="Display image while performing classification">
+      <created>1511126667483</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1511126667483</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
@@ -815,8 +823,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/application/Model.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="141">
-          <caret line="49" column="19" lean-forward="false" selection-start-line="49" selection-start-column="19" selection-end-line="49" selection-end-column="19" />
+        <state relative-caret-position="160">
+          <caret line="355" column="34" lean-forward="false" selection-start-line="355" selection-start-column="32" selection-end-line="355" selection-end-column="34" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>

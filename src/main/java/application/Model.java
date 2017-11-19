@@ -47,9 +47,24 @@ public class Model {
     public String photoClassifyApi(@RequestParam(value="url") String photoUrl)
     {
         return ("Is "+photoUrl+" a car? \n "
+                +"<br><img src=\""+photoUrl+"\"><br>"
                 +isPhotoACar(photoUrl)).replaceAll("\n","<br>");
     }
 
+    @RequestMapping("/classifytest")
+    public String photoClassifyApiTest() {
+        String output="";
+        String url;
+        for(int x=10;x<100;x++)
+        {
+            url="https://dal.objectstorage.open.softlayer.com/v1/AUTH_d80c340568a44039847b6e7887bbdd93/DefaultProjectthomasginader1maristedu/000"+x+".jpg";
+            output+="<br><img src=\""+url+"\"><br>";
+            output+=isPhotoACar(url).replaceAll("\n","<br>");
+        }
+
+        return output;
+
+    }
 
 
 
@@ -203,39 +218,44 @@ public class Model {
     @RequestMapping("/accuracy")
     public String checkAccuracy()
     {
-        String output="";
-        double accuracy;
-        output+="NaiveBayes - ";
-        accuracy = checkAccuracy(NaiveBayesClassifier,10);
-        if(accuracy==-1)
-            output+="model not yet initialized. \n ";
-        else
-            output+=accuracy+"%. \n ";
-        output+="RandomForest - ";
-        accuracy = checkAccuracy(RandomForestClassifier,10);
-        if(accuracy==-1)
-            output+="model not yet initialized. \n ";
-        else
-            output+=accuracy+"%. \n ";
-        output+="J48 - ";
-        accuracy = checkAccuracy(J48Classifier,10);
-        if(accuracy==-1)
-            output+="model not yet initialized. \n ";
-        else
-            output+=accuracy+"%. \n ";
-        output+="DecisionTable - ";
-        accuracy = checkAccuracy(DecisionTableClassifier,10);
-        if(accuracy==-1)
-            output+="model not yet initialized. \n ";
-        else
-            output+=accuracy+"%. \n ";
-        output+="MultilayerPerceptron - ";
-        accuracy = checkAccuracy(MultilayerPerceptronClassifier,10);
-        if(accuracy==-1)
-            output+="model not yet initialized. \n ";
-        else
-            output+=accuracy+"%. \n ";
-        return output.replaceAll("\n","<br>");
+        try {
+
+
+            String output = "";
+            output += "NaiveBayes - ";
+            if (NaiveBayesClassifier == null)
+                output += "model not yet initialized. \n ";
+            else
+                output += checkAccuracy(NaiveBayes.makeCopy(NaiveBayesClassifier), 10) + "%. \n ";
+            output += "RandomForest - ";
+            if (RandomForestClassifier == null)
+                output += "model not yet initialized. \n ";
+            else
+                output += checkAccuracy(RandomForest.makeCopy(RandomForestClassifier), 10) + "%. \n ";
+            output += "J48 - ";
+            if (J48Classifier == null)
+                output += "model not yet initialized. \n ";
+            else
+                output += checkAccuracy(J48.makeCopy(J48Classifier), 10) + "%. \n ";
+            output += "DecisionTable - ";
+            if (DecisionTableClassifier == null)
+                output += "model not yet initialized. \n ";
+            else
+                output += checkAccuracy(DecisionTable.makeCopy(DecisionTableClassifier), 10) + "%. \n ";
+            output += "MultilayerPerceptron - ";
+            if (MultilayerPerceptronClassifier == null)
+                output += "model not yet initialized. \n ";
+            else
+                output += checkAccuracy(MultilayerPerceptron.makeCopy(MultilayerPerceptronClassifier), 10) + "%. \n ";
+
+
+            return output.replaceAll("\n", "<br>");
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+            return "Error unable to check accuracy at this time";
+        }
 
     }
 
@@ -328,6 +348,7 @@ public class Model {
             MultilayerPerceptron MultilayerPerceptronClassifierTemp=new MultilayerPerceptron();
             MultilayerPerceptronClassifierTemp.buildClassifier(data);
             MultilayerPerceptronClassifier=MultilayerPerceptronClassifierTemp;
+            System.out.println("All classifers built");
 
 
 

@@ -2,94 +2,218 @@ package application;
 
 
 
-import java.awt.image.BufferedImage;
-import java.awt.image.Raster;
+import java.io.BufferedReader;
 import java.io.File;
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
-import javax.imageio.ImageIO;
-import javax.ws.rs.ApplicationPath;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 
+import application.rest.CsvDataAPI;
 import com.google.gson.Gson;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import wasdev.sample.rest.CsvDataAPI;
 import weka.classifiers.Classifier;
 import weka.classifiers.Evaluation;
 import weka.classifiers.bayes.NaiveBayes;
-import weka.core.Attribute;
-
+import weka.classifiers.functions.Logistic;
+import weka.classifiers.trees.RandomForest;
+import weka.classifiers.trees.J48;
+import weka.classifiers.rules.DecisionTable;
 import weka.core.DenseInstance;
+import weka.core.FastVector;
 import weka.core.Instance;
 import weka.core.Instances;
+import weka.core.converters.CSVLoader;
 import weka.core.converters.ConverterUtils.DataSource;
-
+import weka.core.converters.Loader;
+import weka.classifiers.evaluation.NominalPrediction;
+import org.springframework.web.bind.annotation.RequestParam;
 
 
 @RestController
 public class Model {
 
+
     static Instances data=null;
+    static Classifier NaiveBayesClassifier=null;
+    static Classifier RandomForestClassifier=null;
+    static Classifier J48Classifier=null;
+    static Classifier DecisionTableClassifier=null;
+    static Classifier LogisticClassifier=null;
+
+    
     Gson gson = new Gson();
+
+    @RequestMapping("/classify")
+    public String photoClassifyApi(@RequestParam(value="url") String photoUrl)
+    {
+        return ("Is "+photoUrl+" a car? \n "
+                +"<br><img src=\""+photoUrl+"\"><br>"
+                +isPhotoACar(photoUrl)).replaceAll("\n","<br>");
+    }
+
+    @RequestMapping("/classifytest")
+    public String photoClassifyApiTest() {
+        String output="";
+        String url;
+        for(int x=10;x<100;x++)
+        {
+            url="https://dal.objectstorage.open.softlayer.com/v1/AUTH_d80c340568a44039847b6e7887bbdd93/DefaultProjectthomasginader1maristedu/000"+x+".jpg";
+            output+="<br><img src=\""+url+"\"><br>";
+            output+=isPhotoACar(url).replaceAll("\n","<br>");
+        }
+
+        return output;
+
+    }
+
 
 
     @RequestMapping("/model")
-    public String photoCarApi(){
+    public String photoCarApi(@RequestParam(value="url") String photoUrl){
         String result = "";
-        Classifier classifier = buildClassifier("cars.csv");
-        result = testAccuracy(classifier,10);
-        boolean boolResult =  isPhotoACar(classifier,"https://dal.objectstorage.open.softlayer.com/v1/AUTH_d80c340568a44039847b6e7887bbdd93/DefaultProjectthomasginader1maristedu/00010.jpg",10);
-        result += boolResult;
+
+        buildClassifiers("cars.csv");
+        result = ""+checkAccuracy(NaiveBayesClassifier,10);
+        double boolResult =  isPhotoACar(NaiveBayesClassifier,"https://dal.objectstorage.open.softlayer.com/v1/AUTH_d80c340568a44039847b6e7887bbdd93/DefaultProjectthomasginader1maristedu/00010.jpg",10);
+        result += boolResult==1;
+
 
         return result;
     }
     public static void main(String args[])
     {
-
-        Classifier classifier = buildClassifier("cars.csv");
-        testAccuracy(classifier,10);
-        boolean result =  isPhotoACar(classifier,"https://dal.objectstorage.open.softlayer.com/v1/AUTH_d80c340568a44039847b6e7887bbdd93/DefaultProjectthomasginader1maristedu/00010.jpg",10);
+        Model model = new Model();
 
 
+        model.buildClassifiers("cars.csv");
+      //  System.out.println(model.isPhotoACar("https://dal.objectstorage.open.softlayer.com/v1/AUTH_d80c340568a44039847b6e7887bbdd93/DefaultProjectthomasginader1maristedu/00010.jpg"));
+       try{
+        System.out.println("Multilayer perceptron accuracy: "+model.checkAccuracy(new Logistic(),10)+"%");
+       }
+       catch(Exception e)
+       {
+           System.out.println("Couldn't build MLP for accuracy testing");
+           e.printStackTrace();
+       }
 
 
-        System.out.println(result);
+
     }
-   /* public static void main(String args[])
+    public String isPhotoACar(String filename)
     {
-
-        Classifier classifier= buildClassifier("C:\\cars.csv");
-        testAccuracy(classifier,10);
-        // 	isPhotoACar(classifier,"C:\\images\\r1.jpg",10);
-        checkDirectory(classifier,"C:\\\\images\\test\\",10);
-
-
-
-        System.out.println("done");
-    }*/
-    public static void checkDirectory(Classifier classifier,String foldername,int sections)
-    {
-        final File testDir = new File(foldername);
-        for(final File testImage : testDir.listFiles())
-        {
-            boolean result = isPhotoACar(classifier,testImage.getAbsolutePath(),10);
-            System.out.print("we predict that "+testImage+" does");
-            if(result)
-                System.out.print(" not");
-            System.out.println(" contain a car");
+        if (filename==null)
+            return "Error couldn't read input image";
+        String output="";
+        int stackTrue=0;
+        int stackFalse=0;
+        double nbRes=isPhotoACar(NaiveBayesClassifier,filename,10);
+        if(nbRes==-1)
+            output+="NaiveBayes model not yet initialized, please check back later ";
+        else if(nbRes==0) {
+            output += "NaiveBayes - False";
+            stackFalse++;
         }
+        else if(nbRes==1) {
+            output += "NaiveBayes - True";
+            stackTrue++;
+        }
+        else
+            output+="Unexpected value returned by NaiveBayes Classifier!";
+
+        output+="\n  ";
+
+        double rfRes=isPhotoACar(RandomForestClassifier,filename,10);
+        if(rfRes==-1)
+            output+="RandomForest model not yet initialized, please check back later \n";
+        else if(rfRes==0) {
+            output += "RandomForest - False";
+            stackFalse++;
+        }
+        else if(rfRes==1) {
+            output += "RandomForest - True";
+            stackTrue++;
+        }
+        else
+            output+="Unexpected value returned by RandomForest Classifier!";
+
+        output+="\n  ";
+
+        double j48Res=isPhotoACar(J48Classifier,filename,10);
+        if(j48Res==-1)
+            output+="J48 model not yet initialized, please check back later \n";
+        else if(j48Res==0) {
+            output += "J48 - False";
+            stackFalse++;
+        }
+        else if(j48Res==1) {
+            output += "J48 - True";
+            stackTrue++;
+        }
+        else
+            output+="Unexpected value returned by J48 Classifier!";
+
+        output+="\n  ";
+
+        double dtRes=isPhotoACar(DecisionTableClassifier,filename,10);
+        if(dtRes==-1)
+            output+="DecisionTable model not yet initialized, please check back later \n";
+        else if(dtRes==0) {
+            output += "DecisionTable - False";
+            stackFalse++;
+        }
+        else if(dtRes==1) {
+            output += "DecisionTable - True";
+            stackTrue++;
+        }
+        else
+            output+="Unexpected value returned by DecisionTable Classifier!";
+
+        output+="\n  ";
+
+        double loRes=isPhotoACar(LogisticClassifier,filename,10);
+        if(loRes==-1)
+            output+="Logistic model not yet initialized, please check back later \n";
+        else if(loRes==0) {
+            output += "Logistic - False";
+            stackFalse++;
+        }
+        else if(loRes==1) {
+            output += "Logistic - True";
+            stackTrue++;
+        }
+        else
+            output+="Unexpected value returned by Logistic Classifier!";
+
+        output+="\n  ";
+        if(stackTrue+stackFalse==0)
+            output+="No classifiers available for stacking";
+        else if(stackTrue==stackFalse)
+            output+="Stacking - True   (tie)";
+        else if(stackTrue>stackFalse)
+            output+="Stacking - True";
+        else
+            output+="Stacking - False";
+        return output;
+
+
+
     }
-    public static boolean isPhotoACar(Classifier classifier,String filename,int sections)
+
+    public double isPhotoACar(Classifier classifier,String filename,int sections)
     {
+        if(classifier==null)
+        {
+            return -1;
+        }
 
         Instance ins = instanceFromImage(filename,sections);
         double result=-1;
         try {
-
+            if (ins==null) {
+                System.out.println("!!!!no instance for image compare, serious error!!!!");
+                return -3;
+            }
             result=classifier.classifyInstance(ins);
         }
         catch(Exception e)
@@ -98,98 +222,165 @@ public class Model {
             e.getCause();
             System.exit(0);
         }
-
-        return result==1;
-
-    }
-    public static String testAccuracy(Classifier classifier,int sections)
-    {
-        String result = "";
-        double actual[] = data.attributeToDoubleArray(sections*sections*3);
-        try {
-            int truPos=0;
-            int falPos=0;
-            int truNeg=0;
-            int falNeg=0;
-
-            for(int photoNum=0;photoNum<actual.length;photoNum++)
-
-            {
-                double prediction= classifier.classifyInstance(data.get(photoNum));
-                // System.out.println(photoNum+" predicted: "+prediction+" actual: "+actual[photoNum]);
-                if(prediction==1&&actual[photoNum]==1)
-                {
-                    truPos++;
-                }
-                if(prediction==1&&actual[photoNum]==0)
-                {
-                    falPos++;
-                }
-                if(prediction==0&&actual[photoNum]==1)
-                {
-                    falNeg++;
-                }
-                if(prediction==0&&actual[photoNum]==0)
-                {
-                    truNeg++;
-                }
-            }
-            System.out.println("True Positive: "+truPos);
-            System.out.println("True Negative: "+truNeg);
-            System.out.println("False Positive: "+falPos);
-            System.out.println("False Negative: "+falNeg);
-            int correct = truPos+truNeg;
-            int incorrect = falNeg+falPos;
-            System.out.println(correct+" correct");
-            System.out.println(incorrect+" incorrect");
-            System.out.println(100*correct/(correct+incorrect)+"%");
-            result = "True Positive: "+truPos + "\n" + "True Negative: "+truNeg + "\n" + "False Positive: "+falPos +
-                    "\n" + "False Negative: "+falNeg + "\n" + correct+" correct" + "\n" + incorrect+" incorrect" + "\n"
-                    + 100*correct/(correct+incorrect)+"%";
-
-        }
-        catch(Exception e)
-        {
-            System.out.println("Unable to classify");
-            e.printStackTrace();
-        }
-
+       // System.out.println(result);
         return result;
 
     }
 
-
-    public static Classifier buildClassifier(String sourceCSV)
+    @RequestMapping("/accuracy")
+    public String checkAccuracy()
     {
+        try {
+
+
+            String output = "";
+            output += "NaiveBayes - ";
+            if (NaiveBayesClassifier == null)
+                output += "model not yet initialized. \n ";
+            else
+                output += checkAccuracy(NaiveBayes.makeCopy(NaiveBayesClassifier), 10) + "%. \n ";
+            output += "RandomForest - ";
+            if (RandomForestClassifier == null)
+                output += "model not yet initialized. \n ";
+            else
+                output += checkAccuracy(RandomForest.makeCopy(RandomForestClassifier), 10) + "%. \n ";
+            output += "J48 - ";
+            if (J48Classifier == null)
+                output += "model not yet initialized. \n ";
+            else
+                output += checkAccuracy(J48.makeCopy(J48Classifier), 10) + "%. \n ";
+            output += "DecisionTable - ";
+            if (DecisionTableClassifier == null)
+                output += "model not yet initialized. \n ";
+            else
+                output += checkAccuracy(DecisionTable.makeCopy(DecisionTableClassifier), 10) + "%. \n ";
+            output += "Logistic - ";
+            if (LogisticClassifier == null)
+                output += "model not yet initialized. \n ";
+            else
+                output += checkAccuracy(Logistic.makeCopy(LogisticClassifier), 10) + "%. \n ";
+
+
+            return output.replaceAll("\n", "<br>");
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+            return "Error unable to check accuracy at this time";
+        }
+
+    }
+
+    public double checkAccuracy(Classifier classifier,int sections)
+    {
+        if (classifier==null)
+            return -1;
+
+        try {
+            Instances[] trainingSplits = new Instances[10];
+            Instances[] testingSplits = new Instances[10];
+            //relies on static Instances Data which was set previously and should remain constant
+            for (int i = 0; i < 10; i++) {
+                trainingSplits[i] = data.trainCV(10, i);
+                testingSplits[i] = data.testCV(10, i);
+
+            }
+            FastVector predictions = new FastVector();
+            for (int i = 0; i < trainingSplits.length; i++) {
+                // Evaluation validation = classify(classifier, trainingSplits[i], testingSplits[i]);
+
+                Evaluation evaluation = new Evaluation(trainingSplits[i]);
+                classifier.buildClassifier(trainingSplits[i]);
+                evaluation.evaluateModel(classifier, testingSplits[i]);
+                predictions.appendElements(evaluation.predictions());
+            }
+
+
+            // double accuracy = calculateAccuracy(predictions);
+            int correct = 0;
+            for (int i = 0; i < predictions.size(); i++) {
+                NominalPrediction np = (NominalPrediction) predictions.elementAt(i);
+                //	System.out.println("for "+i+" you guessed "+np.predicted()+" and it was "+np.actual());
+                if (np.predicted() == np.actual())
+                    correct++;
+             //   System.out.println(correct + " correct of");
+            }
+
+
+            return correct*100/data.size();
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+            System.out.println("Couldn't check accuracy");
+            return -1;
+        }
+    }
+
+
+    public static void buildClassifiers(String sourceCSV)
+    {
+        ClassLoader classloader = Thread.currentThread().getContextClassLoader();
+        InputStream is = classloader.getResourceAsStream("csv/cars.csv");
+        BufferedReader br = new BufferedReader(new InputStreamReader(is));
         //	String filepath="C:\\csv\\cars.csv";
         try {
-            DataSource source = new DataSource(sourceCSV);
-            data = source.getDataSet();
+            //DataSource source = new DataSource(br);
+            CSVLoader loader = new CSVLoader();
+            loader.setSource(is);
+            data = loader.getDataSet();
             data.setClassIndex(data.numAttributes() - 1);
-            NaiveBayes nb = new NaiveBayes();
-            nb.buildClassifier(data);
-            Evaluation evaluation = new Evaluation(data);
+            //NaiveBayes nb = new NaiveBayes();
+           // RandomForest nb = new RandomForest();
 
-            evaluation.evaluateModel(nb,data);
 
-            return nb;
+            //build the classifiers against data
+            //use temp variable to not overwrite the usable static classifier until available
+            System.out.println("Building NaiveBayes");
+            NaiveBayes NaiveBayesClassifierTemp=new NaiveBayes();
+            NaiveBayesClassifierTemp.buildClassifier(data);
+            NaiveBayesClassifier=NaiveBayesClassifierTemp;
+
+            System.out.println("Building RandomForest");
+            RandomForest RandomForestClassifierTemp=new RandomForest();
+            RandomForestClassifierTemp.buildClassifier(data);
+            RandomForestClassifier=RandomForestClassifierTemp;
+
+            System.out.println("Building J48");
+            J48 J48ClassifierTemp=new J48();
+            J48ClassifierTemp.buildClassifier(data);
+            J48Classifier=J48ClassifierTemp;
+
+            System.out.println("Building DecisionTable");
+            DecisionTable DecisionTableClassifierTemp=new DecisionTable();
+            DecisionTableClassifierTemp.buildClassifier(data);
+            DecisionTableClassifier=DecisionTableClassifierTemp;
+
+            System.out.println("Building Logistic");
+            Logistic LogisticClassifierTemp=new Logistic();
+            LogisticClassifierTemp.buildClassifier(data);
+            LogisticClassifier=LogisticClassifierTemp;
+            System.out.println("All classifers built");
+
+
+
         }
         catch(Exception e)
         {
             System.out.println("error building classifier");
             e.printStackTrace();
         }
-        return null;
+
     }
 
 
-    public static Instance instanceFromImage(String filename,int sections)
+    public Instance instanceFromImage(String filename,int sections)
     {
         Instance ins = new DenseInstance((sections*sections*3)+1);
         ins.setDataset(data);
         String headers="";
         //String values=CsvDataAPI.imageToRow(filename,sections);
-        String values=CsvDataAPI.imageToRowFromLinks(filename,sections);
+        String values= CsvDataAPI.imageToRowFromLinks(filename,sections);
         //build headers based on number of sections
 
         for(int row=0;row<sections;row++)
@@ -213,11 +404,7 @@ public class Model {
 
         for(int i=0;i<val.length;i++)
         {
-            // 	System.out.println(head[i]+": "+val[i]);
-            // System.out.println(Integer.parseInt(val[i]));
-            // 	System.out.println(new Attribute(head[i]));
 
-            //ins.setValue(new Attribute(head[i]),Integer.parseInt(val[i]));
             ins.setValue(i,Integer.parseInt(val[i]));
         }
 

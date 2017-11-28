@@ -240,13 +240,13 @@ public class CsvDataAPI {
                             int rgb = Red[y][x];
                             rgb = (rgb << 8) + Green[y][x];
                             rgb = (rgb << 8) + Blue[y][x];
-                            image.setRGB(x, y, rgb);
+                            outputImage.setRGB(x, y, rgb);
                         }
                     }
 
 
-                    File outputFile = new File("/output.bmp");
-                    ImageIO.write(image, "bmp", outputFile);
+                    File outputFile = new File("output.jpg");
+                    ImageIO.write(outputImage, "jpg", outputFile);
 
 
                 }

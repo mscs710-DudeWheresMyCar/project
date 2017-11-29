@@ -88,4 +88,13 @@ input[type="file"] {
   width: 220px;
 }
 
+#answer{
+  border: 2px solid red;
+  padding-left: 5px;
+  padding-top: 5px;
+}
 
+#answer img{
+  height: 150px;
+  width: 200px;
+}

@@ -129,7 +129,8 @@
             	        })
                         .done(function(data) {
             	    	    console.log(data);
-                        
+                            $("#answer").remove();
+                            jQuery("#project-container").append("<div id=\"answer\"><p>" + data  + "</p></div>");
             	        });        
             	   });
      	   	};

@@ -75,7 +75,7 @@ public class Model {
 
         buildClassifiers("cars.csv");
         result = ""+checkAccuracy(NaiveBayesClassifier,10);
-        double boolResult =  isPhotoACar(NaiveBayesClassifier,"https://dal.objectstorage.open.softlayer.com/v1/AUTH_d80c340568a44039847b6e7887bbdd93/DefaultProjectthomasginader1maristedu/00010.jpg",10);
+        double boolResult =  isPhotoACar(NaiveBayesClassifier,photoUrl,10);
         result += boolResult==1;
 
 

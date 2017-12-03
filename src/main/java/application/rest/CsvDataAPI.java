@@ -161,7 +161,8 @@ public class CsvDataAPI {
     public static void main(String args[])
     {
 
-        createCSVFromDirectories("E:\\images\\cars_full","E:\\images\\noncars_full","cars.csv",10);
+        //createCSVFromDirectories("E:\\images\\cars_full","E:\\images\\noncars_full","cars.csv",10);
+        imageToRowFromLinks("https://dal.objectstorage.open.softlayer.com/v1/AUTH_d80c340568a44039847b6e7887bbdd93/DefaultProjectthomasginader1maristedu/00010.jpg", 10);
         System.out.println("done");
     }
 
@@ -232,6 +233,20 @@ public class CsvDataAPI {
                     //		System.out.println("average RGB for this section was: "+Red[gridRow][gridCol]+","+Green[gridRow][gridCol]+","+Blue[gridRow][gridCol]);
                     output+=(""+Red[gridRow][gridCol]+","+Green[gridRow][gridCol]+","+Blue[gridRow][gridCol]+",");
 
+                    BufferedImage outputImage = new BufferedImage(sections, sections, BufferedImage.TYPE_INT_RGB);
+
+                    for (int y = 0; y < sections; y++) {
+                        for (int x = 0; x < sections; x++) {
+                            int rgb = Red[y][x];
+                            rgb = (rgb << 8) + Green[y][x];
+                            rgb = (rgb << 8) + Blue[y][x];
+                            outputImage.setRGB(x, y, rgb);
+                        }
+                    }
+
+
+                    File outputFile = new File("output.jpg");
+                    ImageIO.write(outputImage, "jpg", outputFile);
 
 
                 }

@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *******************************************************************************/ 
+ *******************************************************************************/
 package application.rest;
 
 import java.awt.image.BufferedImage;
@@ -63,18 +63,19 @@ import org.openstack4j.api.types.Facing;
 
 import wasdev.sample.Car;
 
-public class BMConnObject 
+public class BMConnObject
 {
     /************Fields*************/
-    final String USERID = "userId"; 
+    final String USERID = "userId";
     final String PASSWORD = "password";
     final String AUTHURL = "auth_url";
     final String DOMAINNAME = "domainName";
     final String PROJECT = "project";
     final String OBJECTURI = "https://dal.objectstorage.open.softlayer.com/v1/AUTH_d80c340568a44039847b6e7887bbdd93/DefaultProjectthomasginader1maristedu/";    
+
     /*
      * @TODO: use logger4j
-     * 
+     *
      * static
      *{
      *   Logger rootLogger = Logger.getRootLogger();
@@ -89,9 +90,9 @@ public class BMConnObject
 
     /**
      * getAuthString
-     * 
+     *
      * Get the authentication string in JSON format
-     * 
+     *
      * @return: String authString
      */
     public String getAuthString()
@@ -111,13 +112,13 @@ public class BMConnObject
 
     /**
      * getCredentials
-     * 
+     *
      * Get the credentials object from JSON string
-     * 
+     *
      * @param: String JSON String authStr
-     * 
+     *
      * @return: JsonObject credentials
-     * 
+     *
      */
     public Map<String,String> getCredentials(String authStr)
     {
@@ -136,7 +137,7 @@ public class BMConnObject
         }
         return map;
     }
-    
+
     /**
      * connectionObject
      *
@@ -162,15 +163,15 @@ public class BMConnObject
         OSClientV3 os = null;
         try
         {
-        	os = OSFactory.builderV3()
-        		.endpoint(auth_url)
-        		.credentials(userId, password)
-        		.scopeToProject(projectIdent,domainIdent)
-        		.authenticate();
+            os = OSFactory.builderV3()
+                    .endpoint(auth_url)
+                    .credentials(userId, password)
+                    .scopeToProject(projectIdent,domainIdent)
+                    .authenticate();
         }
         catch(Exception e)
         {
-        	System.out.println("Connection Error");
+            System.out.println("Connection Error");
         }
         /*OSClientV3 os2 = OSFactory.builderV3()
           .endpoint(auth_url)
@@ -179,13 +180,13 @@ public class BMConnObject
           .authenticate();*/
         return os;
     }
-    
+
     /**
      * get bytes to recreate image to store it in data object
      */
     public String processImage(byte [] imageByteArr, String fileName){
-    	ByteArrayInputStream bis = new ByteArrayInputStream(imageByteArr);
-    	
+        ByteArrayInputStream bis = new ByteArrayInputStream(imageByteArr);
+
     	/*
     	// Write a image byte array into file system
         FileOutputStream imageOutFile = null;
@@ -208,18 +209,19 @@ public class BMConnObject
 			e.printStackTrace();
 		}
     	*/
-    	//Check for null
-    	OSClientV3 os = null;
-    	try{
-    		os = this.connectionObject();
-		}catch(NullPointerException ex){
-			System.out.println("Null");
-		}
-    	List<? extends SwiftContainer> containers = os.objectStorage().containers().list();
-    	Iterator<? extends SwiftContainer> it = containers.iterator();
+        //Check for null
+        OSClientV3 os = null;
+        try{
+            os = this.connectionObject();
+        }catch(NullPointerException ex){
+            System.out.println("Null");
+        }
+        List<? extends SwiftContainer> containers = os.objectStorage().containers().list();
+        Iterator<? extends SwiftContainer> it = containers.iterator();
         String containerName = it.next().getName();
-        
+
         String etag = os.objectStorage().objects().put(containerName, fileName, Payloads.create(bis));
+
     	//System.out.println(etag);
         //@TODO: Check MD5 in the header if object is created successfully
     	return OBJECTURI + fileName;    
@@ -228,14 +230,14 @@ public class BMConnObject
     //Testing object data
     public String testObjectCon() throws IOException
     {
-    	//Check for null
-    	OSClientV3 os = null;
-    	try{
-    		os = this.connectionObject();
-		}catch(NullPointerException ex){
-			System.out.println("Null");
-		}
-        
+        //Check for null
+        OSClientV3 os = null;
+        try{
+            os = this.connectionObject();
+        }catch(NullPointerException ex){
+            System.out.println("Null");
+        }
+
         //Get Containers (just one in our case)
         List<? extends SwiftContainer> containers = os.objectStorage().containers().list();
         //Get iterator just in case we have more containers
@@ -245,7 +247,7 @@ public class BMConnObject
 
         //Map<String, String> md = os.objectStorage().containers().getMetadata(containerName);
         List<? extends SwiftObject> objs = os.objectStorage().objects().list(containerName);
-        
+
         for (Service s : os.getToken().getCatalog()) {
             if (s.getName().equals("swift")) {
                 for (Endpoint e : s.getEndpoints()) {
@@ -256,12 +258,12 @@ public class BMConnObject
                 }
             }
         }
-        
+
         System.out.println("Container Name: "+containerName);
         System.out.println("Objects in container: "+containers.get(0).getObjectCount());
         System.out.println("Car object: " + objs.get(1).getName());
         System.out.println(ObjectLocation.create(objs.get(1).getContainerName(), objs.get(1).getName()).getURI());
-        
+
         File fileImg = null;
         this.createImageObject(os, containerName, fileImg);// gg uncomment to test
         /*
@@ -271,7 +273,7 @@ public class BMConnObject
         OutputStream os1 = new FileOutputStream(f);
         byte[] buf = new byte[1024];
         int len;
-        while ((len = pl.getInputStream().read(buf)) > 0) 
+        while ((len = pl.getInputStream().read(buf)) > 0)
         {
             os1.write(buf, 0, len);
         }
@@ -289,14 +291,14 @@ public class BMConnObject
         return objectUrl + "/" + containerName + "/" + objs.get(1).getName();
         //ObjectLocation.create(objs.get(1).getContainerName(), objs.get(1).getName()).getURI();
     }
-    
+
     public void createImageObject(OSClientV3 os,String containerName, File fileImg)
     {
-    	fileImg = new File("C:\\Users\\genti\\Downloads\\cars\\cars\\08143.jpg");
-    	String objectName = fileImg.getName();
-    	//System.out.println(fileImg.getName());
-    	//String etag = os.objectStorage().objects().put(containerName, objectName, Payloads.create(fileImg));
-    	//System.out.println(etag);
+        fileImg = new File("C:\\Users\\genti\\Downloads\\cars\\cars\\08143.jpg");
+        String objectName = fileImg.getName();
+        //System.out.println(fileImg.getName());
+        //String etag = os.objectStorage().objects().put(containerName, objectName, Payloads.create(fileImg));
+        //System.out.println(etag);
     }
     /*
     public static void main(String [] args) throws IOException {

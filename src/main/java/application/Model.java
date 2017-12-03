@@ -48,7 +48,7 @@ public class Model {
     public String photoClassifyApi(@RequestParam(value="url") String photoUrl)
     {
         return ("Is "+photoUrl+" a car? \n "
-                +"<br><img src=output.jpg><br>"
+                +"<br><img src=\"output.jpg\"><br>"
                 +isPhotoACar(photoUrl)).replaceAll("\n","<br>");
     }
 

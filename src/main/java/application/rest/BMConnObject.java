@@ -61,8 +61,6 @@ import com.google.gson.JsonParser;
 import org.openstack4j.api.OSClient.OSClientV3;
 import org.openstack4j.api.types.Facing;
 
-import wasdev.sample.Car;
-
 public class BMConnObject
 {
     /************Fields*************/

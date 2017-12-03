@@ -247,8 +247,6 @@ public class CsvDataAPI {
 
                     File outputFile = new File("output.jpg");
                     ImageIO.write(outputImage, "jpg", outputFile);
-
-
                 }
             }
         }

@@ -48,7 +48,7 @@ public class Model {
     public String photoClassifyApi(@RequestParam(value="url") String photoUrl)
     {
         return ("Is "+photoUrl+" a car? \n "
-                +"<br><img src=\""+photoUrl+"\"><br>"
+                +"<br><img src=output.jpg><br>"
                 +isPhotoACar(photoUrl)).replaceAll("\n","<br>");
     }
 
@@ -111,12 +111,12 @@ public class Model {
         if(nbRes==-1)
             output+="NaiveBayes model not yet initialized, please check back later ";
         else if(nbRes==0) {
-            output += "NaiveBayes - False";
-            stackFalse++;
-        }
-        else if(nbRes==1) {
             output += "NaiveBayes - True";
             stackTrue++;
+        }
+        else if(nbRes==1) {
+            output += "NaiveBayes - False";
+            stackFalse++;
         }
         else
             output+="Unexpected value returned by NaiveBayes Classifier!";
@@ -127,12 +127,12 @@ public class Model {
         if(rfRes==-1)
             output+="RandomForest model not yet initialized, please check back later \n";
         else if(rfRes==0) {
-            output += "RandomForest - False";
-            stackFalse++;
-        }
-        else if(rfRes==1) {
             output += "RandomForest - True";
             stackTrue++;
+        }
+        else if(rfRes==1) {
+            output += "RandomForest - False";
+            stackFalse++;
         }
         else
             output+="Unexpected value returned by RandomForest Classifier!";
@@ -143,12 +143,12 @@ public class Model {
         if(j48Res==-1)
             output+="J48 model not yet initialized, please check back later \n";
         else if(j48Res==0) {
-            output += "J48 - False";
-            stackFalse++;
-        }
-        else if(j48Res==1) {
             output += "J48 - True";
             stackTrue++;
+        }
+        else if(j48Res==1) {
+            output += "J48 - False";
+            stackFalse++;
         }
         else
             output+="Unexpected value returned by J48 Classifier!";
@@ -159,12 +159,12 @@ public class Model {
         if(dtRes==-1)
             output+="DecisionTable model not yet initialized, please check back later \n";
         else if(dtRes==0) {
-            output += "DecisionTable - False";
-            stackFalse++;
-        }
-        else if(dtRes==1) {
             output += "DecisionTable - True";
             stackTrue++;
+        }
+        else if(dtRes==1) {
+            output += "DecisionTable - False";
+            stackFalse++;
         }
         else
             output+="Unexpected value returned by DecisionTable Classifier!";
@@ -175,12 +175,12 @@ public class Model {
         if(loRes==-1)
             output+="Logistic model not yet initialized, please check back later \n";
         else if(loRes==0) {
-            output += "Logistic - False";
-            stackFalse++;
-        }
-        else if(loRes==1) {
             output += "Logistic - True";
             stackTrue++;
+        }
+        else if(loRes==1) {
+            output += "Logistic - False";
+            stackFalse++;
         }
         else
             output+="Unexpected value returned by Logistic Classifier!";

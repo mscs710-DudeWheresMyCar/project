@@ -28,6 +28,8 @@ import javax.ws.rs.core.Application;
 
 import application.rest.BMConnObject;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import wasdev.sample.Car;
 
@@ -59,8 +61,8 @@ public class CarAPI extends Application {
  * @throws ClassNotFoundException 
  * @throws IOException 
    */
-  @RequestMapping("/api/cars")
-    public String getCars() throws ClassNotFoundException, IOException {
+  @RequestMapping(value = "/api/getCar", method = RequestMethod.GET)
+    public String getCar() throws ClassNotFoundException, IOException {
     	System.out.println("Cars");
 		
 		List<String> names = new ArrayList<String>();
@@ -78,6 +80,7 @@ public class CarAPI extends Application {
 		//cap.testObjectCon();
 		names.add("Genti");
 		names.add("Genti2");
+		names.add("Genti3");
 		return new Gson().toJson(names);
     }
     
@@ -104,10 +107,11 @@ public class CarAPI extends Application {
      * @param //visitor The new Visitor to create.
      * @return The Visitor after it has been stored.  This will include a unique ID for the Visitor.
      */
-    @POST
-    @Produces("application/text")
-    @Consumes("application/json")
-    public String newToDo(Car car) {
+   // @POST
+   // @Produces("application/text")
+   // @Consumes("application/json")
+  @RequestMapping(value = "/api/postCar", method = RequestMethod.POST)
+    public String postCar(@RequestBody Car car) {
     	String smth = "empty";// gg testing
     	//Get only data part of base64 string
     	String [] data = car.getImgData().split(",");

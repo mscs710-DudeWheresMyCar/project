@@ -30,3 +30,71 @@
 	border: 2px solid green;
 	margin-bottom: 5px;
 }
+
+
+input[type="file"] {
+    display: none;
+}
+
+.filename {
+    border: 1px solid #ccc;
+    display: inline-block;
+    padding: 6px 12px;
+    cursor: pointer;
+}
+
+#imageUpload p {
+  line-height: 32px;
+  padding-left: 10px;
+}
+
+#imageUpload label, #imageUpload button {
+  background-color: #7F9CCB;
+  padding: 5px 10px;
+  border-radius: 5px;
+  border: 1px ridge black;
+  font-size: 1.8rem;
+  height: auto;
+}
+
+#imageUpload label:hover, #imageUpload button:hover {
+  background-color: #2D5BA3;
+  color: white;
+}
+
+#imageUpload label:active, #imageUpload button:active {
+  background-color: #0D3F8F;
+  color: white;
+}
+
+#imageUpload img {
+  height: 64px;
+  order: 1;
+}
+
+#imageUpload p {
+  line-height: 63px;
+  padding-left: 10px;
+  display: inline-block;
+  background: #eee;
+  width: 220px;
+}
+
+#imageUpload p.imgInitial {
+  line-height: 63px;
+  padding-left: 10px;
+  display: inline-block;
+  background: #eee;
+  width: 220px;
+}
+
+#answer{
+  border: 2px solid red;
+  padding-left: 5px;
+  padding-top: 5px;
+}
+
+#answer img{
+  height: 150px;
+  width: 200px;
+}

@@ -71,6 +71,7 @@ public class BMConnObject
     final String AUTHURL = "auth_url";
     final String DOMAINNAME = "domainName";
     final String PROJECT = "project";
+    final String OBJECTURI = "https://dal.objectstorage.open.softlayer.com/v1/AUTH_d80c340568a44039847b6e7887bbdd93/DefaultProjectthomasginader1maristedu/";    
 
     /*
      * @TODO: use logger4j
@@ -220,8 +221,10 @@ public class BMConnObject
         String containerName = it.next().getName();
 
         String etag = os.objectStorage().objects().put(containerName, fileName, Payloads.create(bis));
-        System.out.println(etag);
-        return "Function in BM called";
+
+    	//System.out.println(etag);
+        //@TODO: Check MD5 in the header if object is created successfully
+    	return OBJECTURI + fileName;    
     }
 
     //Testing object data

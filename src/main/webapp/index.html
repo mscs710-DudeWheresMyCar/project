@@ -10,6 +10,7 @@
     <!-- Bootstrap -->
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
     <link href="styles.css" rel="stylesheet">
+    <script src="custom.js" type="text/javascript"></script>
 </head>
 
 <body>
@@ -33,31 +34,29 @@
     		<p id='testCars'></p>
     	</div>
     	<div id='imageUpload'>
-    	Choose file to upload<br>
-    	<!-- 
-		<form action="./api/cars" method="post" enctype="multipart/form-data">
-			<input name="file" id="filename" type="file" /><br><br>
-			<button name="submit" type="submit">Upload</button>
-		</form>
-		-->
-		<div id='imageFile'>
-			<input name="file" id="filename" type="file" /><br>
-			<button id="sendImg" name="submit" type="submit">Upload</button>
-		</div>
-		</div>
+            <div id='imageFile'>
+                <label for="filename" class="filename">Chose Image to upload</label>
+                <input name="filename" id="filename" type="file" onchange="handleFile(this.file)"/></br>
+            </div>
+            <div id="filemeta">
+                <p class="imgInitial">No file selected</p>
+            </div>
+            <button id="sendImg" name="submit" type="submit">Upload</button>
+        </div>
+        <!--
     	<div id="left-menu">
     		<input id="getAll" type="button" class="form-control" name="GetAll" value="GetAll" />
     	</div>
     	<div id="right-output">
-    		<img src="https://dal.objectstorage.open.softlayer.com/v1/AUTH_d80c340568a44039847b6e7887bbdd93/DefaultProjectthomasginader1maristedu/08136.jpg" alt="Smiley face">
+    		<img src="https://dal.objectstorage.open.softlayer.com/v1/AUTH_d80c340568a44039847b6e7887bbdd93/DefaultProjectthomasginader1maristedu/08118.jpg" alt="Smiley face">
     	</div>
+        -->
     </div>
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script src="antixss.js" type="text/javascript"></script>
-
     <script>
     	//Submit data when enter key is pressed
         $('#user_name').keydown(function(e) {
@@ -91,7 +90,7 @@
         	   };
         	}
     	/*
-    	//Sent to CarAPI Rest Call
+        Sent to CarAPI Rest Call
         $('#sendImg').click(function(){
         	var imgElem = $('#filename')[0].files[0];
         	var imgDataF = JSON.stringify(getBase64(imgElem));
@@ -113,23 +112,34 @@
         	var reader = new FileReader();
      	   	reader.readAsDataURL(file);
      	   	reader.onload = function (){
-     	   		var imgData = reader.result;
-     	    	var genti = "Genti";
+                var imgData = reader.result;
+     	    	var genti = "Genti Post";
      	    	$.ajax({
             		method: "POST",  
-            	  	url: "./api/cars",
+            	  	url: "./api/postCar",
             	  	contentType: "application/json",
             	  	data: JSON.stringify({imgData:imgData,fileName:fileName})
             	  })
             	  .done(function(data) {
             	    	console.log(data);
+                        $.ajax({
+            		    method: "POST",  
+            	  	    url: "/classify",
+                            data: {url: data}
+            	        })
+                        .done(function(data) {
+            	    	    console.log(data);
+                            $("#answer").remove();
+                            jQuery("#project-container").append("<div id=\"answer\"><p>" + data  + "</p></div>");
+            	        });        
             	   });
      	   	};
      	   	reader.onerror = function (error) {
      	     //console.log('Error: ', error);
      	   	};
         });
-        
+
+       /* 
         //Retreive all the visitors from the database
         function getNames(){
           $.get("./api/visitors")
@@ -148,11 +158,15 @@
                   }
               });
           }
-        
+        */
+
       //Retreive all the visitors from the database
         function getCars(){
-          $.get("./api/cars")
+          $.get("./api/getCar")
               .done(function(data) {
+                  console.log('I am here now');
+                  console.log(data);
+                  /*
                   if(data.length > 0) {
                     data.forEach(function(element, index) {
                       //data[index] = AntiXSS.sanitizeInput(element) // original
@@ -166,11 +180,12 @@
                   {
                 	  $('#testDbConnection').html("Testing DB Connection... " + "DBConnection...Failed");
                   }
+                  */
               });
           }
           
           //Call getNames on page load.
-          getNames();
+          //getNames();
           getCars();
           
           //----------------------------------------------------------
@@ -187,9 +202,7 @@
           	$('#getAll').click(function(){
           		alert('Clicked');
           	});
-          //----------------------------------------------------------
-          
-          
+          //----------------------------------------------------------          
     </script>
 </body>
 

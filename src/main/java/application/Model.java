@@ -47,9 +47,7 @@ public class Model {
     @RequestMapping("/classify")
     public String photoClassifyApi(@RequestParam(value="url") String photoUrl)
     {
-        return ("Is "+photoUrl+" a car? \n "
-                +"<br><img src=\"output.jpg\"><br>"
-                +isPhotoACar(photoUrl)).replaceAll("\n","<br>");
+        return isPhotoACar(photoUrl);
     }
 
     @RequestMapping("/classifytest")
@@ -83,19 +81,9 @@ public class Model {
     }
     public static void main(String args[])
     {
-        Model model = new Model();
-
-
-        model.buildClassifiers("cars.csv");
-      //  System.out.println(model.isPhotoACar("https://dal.objectstorage.open.softlayer.com/v1/AUTH_d80c340568a44039847b6e7887bbdd93/DefaultProjectthomasginader1maristedu/00010.jpg"));
-       try{
-        System.out.println("Multilayer perceptron accuracy: "+model.checkAccuracy(new Logistic(),10)+"%");
-       }
-       catch(Exception e)
-       {
-           System.out.println("Couldn't build MLP for accuracy testing");
-           e.printStackTrace();
-       }
+       Model m = new Model();
+       m.buildClassifiers("cars.csv");
+       System.out.println(m.isPhotoACar("https://dal.objectstorage.open.softlayer.com/v1/AUTH_d80c340568a44039847b6e7887bbdd93/DefaultProjectthomasginader1maristedu/00059.jpg"));
 
 
 
@@ -109,91 +97,91 @@ public class Model {
         int stackFalse=0;
         double nbRes=isPhotoACar(NaiveBayesClassifier,filename,10);
         if(nbRes==-1)
-            output+="NaiveBayes model not yet initialized, please check back later ";
+            output+="NaiveBayes,Unavailable,";
         else if(nbRes==0) {
-            output += "NaiveBayes - True";
+            output += "NaiveBayes,True,";
             stackTrue++;
         }
         else if(nbRes==1) {
-            output += "NaiveBayes - False";
+            output += "NaiveBayes,False,";
             stackFalse++;
         }
         else
-            output+="Unexpected value returned by NaiveBayes Classifier!";
+            output+="NaiveBayes,Error,";
 
-        output+="\n  ";
+
 
         double rfRes=isPhotoACar(RandomForestClassifier,filename,10);
         if(rfRes==-1)
-            output+="RandomForest model not yet initialized, please check back later \n";
+            output+="RandomForest,Unavailable,";
         else if(rfRes==0) {
-            output += "RandomForest - True";
+            output += "RandomForest,True,";
             stackTrue++;
         }
         else if(rfRes==1) {
-            output += "RandomForest - False";
+            output += "RandomForest,False,";
             stackFalse++;
         }
         else
-            output+="Unexpected value returned by RandomForest Classifier!";
+            output+="RandomForest,Error,";
 
-        output+="\n  ";
+
 
         double j48Res=isPhotoACar(J48Classifier,filename,10);
         if(j48Res==-1)
-            output+="J48 model not yet initialized, please check back later \n";
+            output+="J48,Unavailable,";
         else if(j48Res==0) {
-            output += "J48 - True";
+            output += "J48,True,";
             stackTrue++;
         }
         else if(j48Res==1) {
-            output += "J48 - False";
+            output += "J48,False,";
             stackFalse++;
         }
         else
-            output+="Unexpected value returned by J48 Classifier!";
+            output+="J48,Error,";
 
-        output+="\n  ";
+
 
         double dtRes=isPhotoACar(DecisionTableClassifier,filename,10);
         if(dtRes==-1)
-            output+="DecisionTable model not yet initialized, please check back later \n";
+            output+="DecisionTable,Unavailable,";
         else if(dtRes==0) {
-            output += "DecisionTable - True";
+            output += "DecisionTable,True,";
             stackTrue++;
         }
         else if(dtRes==1) {
-            output += "DecisionTable - False";
+            output += "DecisionTable,False,";
             stackFalse++;
         }
         else
-            output+="Unexpected value returned by DecisionTable Classifier!";
+            output+="DecisionTable,Error,";
 
-        output+="\n  ";
+
 
         double loRes=isPhotoACar(LogisticClassifier,filename,10);
         if(loRes==-1)
-            output+="Logistic model not yet initialized, please check back later \n";
+            output+="Logistic,Unavailable,";
         else if(loRes==0) {
-            output += "Logistic - True";
+            output += "Logistic,True,";
             stackTrue++;
         }
         else if(loRes==1) {
-            output += "Logistic - False";
+            output += "Logistic,False,";
             stackFalse++;
         }
         else
-            output+="Unexpected value returned by Logistic Classifier!";
+            output+="Logistic,Error,";
 
-        output+="\n  ";
+
         if(stackTrue+stackFalse==0)
-            output+="No classifiers available for stacking";
+            output+="Stacking,None";
         else if(stackTrue==stackFalse)
-            output+="Stacking - True   (tie)";
+            output+="Stacking,True(tie)";
         else if(stackTrue>stackFalse)
-            output+="Stacking - True";
+            output+="Stacking,True";
         else
-            output+="Stacking - False";
+            output+="Stacking,False";
         return output;
 
 
@@ -317,8 +305,8 @@ public class Model {
         }
     }
 
-
-    public static void buildClassifiers(String sourceCSV)
+    @RequestMapping("/rebuild")
+    public static String buildClassifiers(String sourceCSV)
     {
         ClassLoader classloader = Thread.currentThread().getContextClassLoader();
         InputStream is = classloader.getResourceAsStream("csv/cars.csv");
@@ -361,6 +349,7 @@ public class Model {
             LogisticClassifierTemp.buildClassifier(data);
             LogisticClassifier=LogisticClassifierTemp;
             System.out.println("All classifers built");
+            return "All models built";
 
 
 
@@ -369,6 +358,8 @@ public class Model {
         {
             System.out.println("error building classifier");
             e.printStackTrace();
+            System.out.println("Error building models");
+            return "Error building models";
         }
 
     }

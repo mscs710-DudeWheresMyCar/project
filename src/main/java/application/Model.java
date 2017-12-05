@@ -182,7 +182,9 @@ public class Model {
             output+="Stacking,True";
         else
             output+="Stacking,False";
-        return output;
+        String outputfilename="pixelized"+filename.substring(filename.lastIndexOf("/")+1,filename.length());
+
+        return outputfilename+","+output;
 
 
 

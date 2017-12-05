@@ -177,6 +177,7 @@ public class CsvDataAPI {
      */
     public static String imageToRowFromLinks(String filename, int sections)
     {
+        System.out.println("imageToRowFromLinks called");
         String output="";
         try {
             //File file=new File(filename);
@@ -235,20 +236,23 @@ public class CsvDataAPI {
 
                     BufferedImage outputImage = new BufferedImage(sections, sections, BufferedImage.TYPE_INT_RGB);
 
-                    for (int y = 0; y < sections; y++) {
-                        for (int x = 0; x < sections; x++) {
-                            int rgb = Red[y][x];
-                            rgb = (rgb << 8) + Green[y][x];
-                            rgb = (rgb << 8) + Blue[y][x];
-                            outputImage.setRGB(x, y, rgb);
-                        }
-                    }
+                }
 
+            }
+            BufferedImage outputImage = new BufferedImage(sections, sections, BufferedImage.TYPE_INT_RGB);
 
-                    File outputFile = new File("output.jpg");
-                    ImageIO.write(outputImage, "jpg", outputFile);
+            for (int y = 0; y < sections; y++) {
+                for (int x = 0; x < sections; x++) {
+                    int rgb = Red[y][x];
+                    rgb = (rgb << 8) + Green[y][x];
+                    rgb = (rgb << 8) + Blue[y][x];
+                    outputImage.setRGB(x, y, rgb);
                 }
             }
+            String outputfilename="pixelized"+filename.substring(filename.lastIndexOf("/")+1,filename.length());
+            File outputFile = new File(outputfilename);
+            System.out.println("can i save "+outputfilename);
+            ImageIO.write(outputImage, "jpg", outputFile);
         }
         catch(Exception e)
         {

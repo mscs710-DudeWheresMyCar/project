@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
+import application.rest.BMConnObject;
 import application.rest.CsvDataAPI;
 import com.google.gson.Gson;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -41,6 +42,8 @@ public class Model {
     static Classifier DecisionTableClassifier=null;
     static Classifier LogisticClassifier=null;
 
+
+
     
     Gson gson = new Gson();
 
@@ -48,7 +51,7 @@ public class Model {
     public String photoClassifyApi(@RequestParam(value="url") String photoUrl)
     {
         return ("Is "+photoUrl+" a car? \n "
-                +"<br><img src=\"output.jpg\"><br>"
+                +"<br><img src=file:///output.jpg><br>"
                 +isPhotoACar(photoUrl)).replaceAll("\n","<br>");
     }
 

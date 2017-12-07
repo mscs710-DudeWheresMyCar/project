@@ -182,7 +182,8 @@ public class CsvDataAPI {
      */
     public static String imageToRowFromLinks(String filename, int sections)
     {
-        System.out.println("imageToRowFromLinks called");
+        //System.out.println("imageToRowFromLinks called");
+        BMConnObject cap = new BMConnObject();
         String output="";
         try {
             //File file=new File(filename);
@@ -239,7 +240,7 @@ public class CsvDataAPI {
                     //		System.out.println("average RGB for this section was: "+Red[gridRow][gridCol]+","+Green[gridRow][gridCol]+","+Blue[gridRow][gridCol]);
                     output+=(""+Red[gridRow][gridCol]+","+Green[gridRow][gridCol]+","+Blue[gridRow][gridCol]+",");
 
-                    BufferedImage outputImage = new BufferedImage(sections, sections, BufferedImage.TYPE_INT_RGB);
+                   // BufferedImage outputImage = new BufferedImage(sections, sections, BufferedImage.TYPE_INT_RGB);
 
                 }
 
@@ -254,10 +255,17 @@ public class CsvDataAPI {
                     outputImage.setRGB(x, y, rgb);
                 }
             }
-            String outputfilename="pixelized"+filename.substring(filename.lastIndexOf("/")+1,filename.length());
-            File outputFile = new File(outputfilename);
-            System.out.println("can i save "+outputfilename);
-            ImageIO.write(outputImage, "jpg", outputFile);
+
+
+            //Now lets make this buffered image into a byte array
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            ImageIO.write(outputImage, "jpg", baos );
+            baos.flush();
+            byte[] imageByteArray = baos.toByteArray();
+            baos.close();
+
+           cap.processImage(imageByteArray,"pixelized"+filename.substring(filename.lastIndexOf("/")+1,filename.length()));
+
         }
         catch(Exception e)
         {
@@ -425,6 +433,14 @@ public class CsvDataAPI {
 
 
         return outputText;
+    }
+    public static String addPixelizedToFileName(String filename)
+    {
+        //first pick up the portion of the filename dropping the url and add pixelized before it
+        String pixeledFileName="pixelized"+filename.substring(filename.lastIndexOf("/")+1,filename.length());
+        // then add back in the original url
+        return filename.substring(0,filename.lastIndexOf("/")+1)+pixeledFileName;
+
     }
 
 }

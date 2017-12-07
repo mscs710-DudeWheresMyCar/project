@@ -185,8 +185,8 @@ public class Model {
             output+="Stacking,True";
         else
             output+="Stacking,False";
-        String outputfilename="pixelized"+filename.substring(filename.lastIndexOf("/")+1,filename.length());
 
+        String outputfilename=CsvDataAPI.addPixelizedToFileName(filename);
         return outputfilename+","+output;
 
 

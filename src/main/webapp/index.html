@@ -118,7 +118,9 @@
                         .done(function(data) {
             	    	    console.log(data);
                             $("#answer").remove();
-                            jQuery("#project-container").append("<div id=\"answer\">" + "<img src=" + uri + " alt=\"Cars image\">" + "</div>");
+                             var arrOfData = data.split(',');
+
+                            jQuery("#project-container").append("<div id=\"answer\">" + "<img src=" + arrOfData[0] + " alt=\"Cars image\">" + "</div>");
                             var table = buildTableModel(data);
                             jQuery("#answer").append(table);
             	        });        

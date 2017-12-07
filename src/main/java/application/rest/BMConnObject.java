@@ -99,8 +99,8 @@ public class BMConnObject
         authStr += "\"project\": \"object_storage_850aaf2d_73ea_4b8d_ba87_f3629bcb7c68\",";
         authStr += "\"projectId\": \"d80c340568a44039847b6e7887bbdd93\"," + "\"region\": \"dallas\",";
         authStr += " \"userId\": \"231a8503e7354c3280fbdd9617262b39\",";
-        authStr += "\"username\": \"admin_0555aeb40e0677c6f61b1d2161fd962a4cf8d1e3\",";// add 3
-        authStr += "\"password\": \"BMh#ale-Y7_0S_Tk\"," + "\"domainId\": \"9c76df66cd264a70b8a2a295c60ad7e7\",";//add k
+        authStr += "\"username\": \"admin_0555aeb40e0677c6f61b1d2161fd962a4cf8d1e3\",";
+        authStr += "\"password\": \"BMh#ale-Y7_0S_Tk\"," + "\"domainId\": \"9c76df66cd264a70b8a2a295c60ad7e7\",";
         authStr += "\"domainName\": \"1433205\"," + "\"role\": \"admin\"" + "},";
         authStr += "\"syslog_drain_url\": null," + "\"volume_mounts\": []," + "\"label\": \"Object-Storage\",";
         authStr += "\"provider\": null," + "\"plan\": \"Free\"," + "\"name\": \"DSX-ObjectStorage\",";
@@ -184,29 +184,6 @@ public class BMConnObject
      */
     public String processImage(byte [] imageByteArr, String fileName){
         ByteArrayInputStream bis = new ByteArrayInputStream(imageByteArr);
-
-    	/*
-    	// Write a image byte array into file system
-        FileOutputStream imageOutFile = null;
-		try {
-			imageOutFile = new FileOutputStream("C:\\Users\\genti\\Pictures\\"+fileName);
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-        try {
-			imageOutFile.write(imageByteArr);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-        try {
-			imageOutFile.close();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-    	*/
         //Check for null
         OSClientV3 os = null;
         try{
@@ -220,7 +197,6 @@ public class BMConnObject
 
         String etag = os.objectStorage().objects().put(containerName, fileName, Payloads.create(bis));
 
-    	//System.out.println(etag);
         //@TODO: Check MD5 in the header if object is created successfully
     	return OBJECTURI + fileName;    
     }
@@ -303,5 +279,4 @@ public class BMConnObject
         CarAPI api = new CarAPI();
         api.testObjectCon();
     }*/
-
 }

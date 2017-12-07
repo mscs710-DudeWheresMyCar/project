@@ -29,6 +29,7 @@
 #imageUpload {
 	border: 2px solid green;
 	margin-bottom: 5px;
+        padding: 4px;
 }
 
 
@@ -92,9 +93,31 @@ input[type="file"] {
   border: 2px solid red;
   padding-left: 5px;
   padding-top: 5px;
+  overflow: hidden;
 }
 
 #answer img{
-  height: 150px;
-  width: 200px;
+  height: 260px;
+  width: 340px;
+  float: left;
+  margin-bottom: 4px;
 }
+
+.model-answer{
+  float: left;
+  margin-left: 10px;
+  margin-bottom: 4px;
+}
+
+table {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    //width: 100%;
+}
+
+td, th {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 8px;
+}
+

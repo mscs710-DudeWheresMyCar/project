@@ -36,82 +36,33 @@ import com.google.gson.Gson;
 
 @RestController
 public class CarAPI extends Application {
-	
-	//Our database store
-	//For testing db connection here
-	//VisitorStore store = VisitorStoreFactory.getInstance();
-	//CarApi obect
-	//@TODO: Rename this file
-	BMConnObject cap = new BMConnObject();
-	//Db2 db = new Db2();
-	//Testing tst = new Testing();
-  /**
-   * Gets all Visitors.
-   * REST API example:
-   * <code>
-   * GET http://localhost:9080/GetStartedJava/api/visitors
-   * </code>
-   * 
-   * Response:
-   * <code>
-   * [ "Bob", "Jane" ]
-   * </code>
-   * @return A collection of all the Visitors
- * @throws ClassNotFoundException 
- * @throws IOException 
-   */
-  @RequestMapping(value = "/api/getCar", method = RequestMethod.GET)
+    //Initiate image processing object
+    BMConnObject cap = new BMConnObject();
+    /**
+     * getCar
+     * @TODO: Call this API with an String arg representing file name for the image to be returned
+     */
+    @RequestMapping(value = "/api/getCar", method = RequestMethod.GET)
     public String getCar() throws ClassNotFoundException, IOException {
-    	System.out.println("Cars");
-		
-		List<String> names = new ArrayList<String>();
-		/*
-		for (Visitor doc : store.getAll()) {
-			String name = doc.getName();
-			if (name != null){
-				names.add(name);
-			}
-		}
-		*/
-		//names.add(cap.testObjectCon());
-		//db.getAll();
-		//tst.testApp();
-		//cap.testObjectCon();
-		names.add("Genti");
-		names.add("Genti2");
-		names.add("Genti3");
-		return new Gson().toJson(names);
+    	//System.out.println("Cars");
+        List<String> names = new ArrayList<String>();
+        names.add("Car1");
+        names.add("Car2");
+        names.add("Car3");
+        return new Gson().toJson(names);
     }
     
     /**
-     * Creates a new Visitor.
-     * 
-     * REST API example:
-     * <code>
-     * POST http://localhost:9080/GetStartedJava/api/visitors
-     * <code>
-     * POST Body:
-     * <code>
-     * {
-     *   "name":"Bob"
-     * }
-     * </code>
-     * Response:
-     * <code>
-     * {
-     *   "id":"123",
-     *   "name":"Bob"
-     * }
-     * </code>
-     * @param //visitor The new Visitor to create.
-     * @return The Visitor after it has been stored.  This will include a unique ID for the Visitor.
+     * postCar
+     *
+     * This is the REST API function for POST data
+     * We save the image to the data Object 
+     * @param Car Object, the new car to create.
+     * @return String, The hash of the image stored in the data Object after it has been stored or empty.
      */
-   // @POST
-   // @Produces("application/text")
-   // @Consumes("application/json")
-  @RequestMapping(value = "/api/postCar", method = RequestMethod.POST)
+    @RequestMapping(value = "/api/postCar", method = RequestMethod.POST)
     public String postCar(@RequestBody Car car) {
-    	String smth = "empty";// gg testing
+    	String answer = "error";
     	//Get only data part of base64 string
     	String [] data = car.getImgData().split(",");
     	//Create stream 
@@ -119,9 +70,9 @@ public class CarAPI extends Application {
         //Get file name
         String fileName = car.getFileName();
         //Start processing 
-        smth = cap.processImage(imageDataBytes,fileName);
+        answer = cap.processImage(imageDataBytes,fileName);
         //@TODO: return useful information. This is just for testing
-        return smth;
+        return answer;
     }
 
 }

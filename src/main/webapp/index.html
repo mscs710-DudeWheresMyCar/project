@@ -14,8 +14,8 @@
 </head>
 
 <body>
-	<!--
-	gg this is commented out for now but might be neccesary to test database communication   
+    <!--
+    gg this is commented out for now but might be neccesary to test database communication   
     <div class="container">
         <h1>Hello Team.</h1>
         <div id="nameInput" class="input-group-lg center-block helloInput">
@@ -66,18 +66,19 @@
            		$('#response').html("loading...");
             	//POST request to API to create a new visitor entry in the database
                 $.ajax({
-				  method: "POST",
-				  url: "./api/visitors",
-				  contentType: "application/json",
-				  data: JSON.stringify({name: name })
-				})
-                .done(function(data) {	
-                    $('#response').html(AntiXSS.sanitizeInput(data));
-                    getNames();
-                });
-            }
-        });
-    	
+                      method: "POST",
+                      url: "./api/visitors",
+                      contentType: "application/json",
+                      data: JSON.stringify({name: name })
+                    })
+                    .done(function(data) {	
+                        $('#response').html(AntiXSS.sanitizeInput(data));
+                        getNames();
+                    });
+                }
+            });
+    
+        /*
     	//Convert image to base64
         function getBase64(file) {
         	   var reader = new FileReader();
@@ -89,26 +90,12 @@
         	     //console.log('Error: ', error);
         	   };
         	}
-    	/*
-        Sent to CarAPI Rest Call
-        $('#sendImg').click(function(){
-        	var imgElem = $('#filename')[0].files[0];
-        	var imgDataF = JSON.stringify(getBase64(imgElem));
-        	  $.ajax({
-        		method: "POST",  
-        	  	url: "./api/cars",
-        	  	contentType: "application/json",
-        	  	data: JSON.stringify({imgData: imgDataF })
-        	  }).done(function(data) {
-        	    	console.log(data);
-        	   });
-        	});
-    	*/
-      //Sent to CarAPI Rest Call
+        */
+
+        //CarAPI Rest Call
         $('#sendImg').click(function(e){
         	var file = $('#filename')[0].files[0];
         	var fileName = file.name;
-        	//console.log(file.name);
         	var reader = new FileReader();
      	   	reader.readAsDataURL(file);
      	   	reader.onload = function (){
@@ -121,7 +108,8 @@
             	  	data: JSON.stringify({imgData:imgData,fileName:fileName})
             	  })
             	  .done(function(data) {
-            	    	console.log(data);
+                        var uri = data;
+            	    	console.log(uri);
                         $.ajax({
             		    method: "POST",  
             	  	    url: "/classify",
@@ -130,12 +118,14 @@
                         .done(function(data) {
             	    	    console.log(data);
                             $("#answer").remove();
-                            jQuery("#project-container").append("<div id=\"answer\"><p>" + data  + "</p></div>");
+                            jQuery("#project-container").append("<div id=\"answer\">" + "<img src=" + uri + " alt=\"Cars image\">" + "</div>");
+                            var table = buildTableModel(data);
+                            jQuery("#answer").append(table);
             	        });        
             	   });
      	   	};
      	   	reader.onerror = function (error) {
-     	     //console.log('Error: ', error);
+                     console.log('Error: ', error);
      	   	};
         });
 
@@ -178,32 +168,13 @@
                   }
                   else
                   {
-                	  $('#testDbConnection').html("Testing DB Connection... " + "DBConnection...Failed");
+                      $('#testDbConnection').html("Testing DB Connection... " + "DBConnection...Failed");
                   }
                   */
               });
           }
-          
-          //Call getNames on page load.
-          //getNames();
-          getCars();
-          
-          //----------------------------------------------------------
-          function callFunc(){
-        	  //var selectedFile = document.getElementById('input').files[0]
-        	  var file = $('#filename')[0].files[0];
-        	  getBase64(file); // prints the base64 string
-				if (file){
-  					//console.log(file.name);
-				}
-        	  //console.log($('filename').value());
-        	 //alert($('filename')); 
-          }
-          	$('#getAll').click(function(){
-          		alert('Clicked');
-          	});
-          //----------------------------------------------------------          
-    </script>
+          //getCars();
+      </script>
 </body>
 
 </html>

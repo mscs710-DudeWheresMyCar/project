@@ -21,8 +21,11 @@ function buildTableModel(data){
     var halfLength = arrLength / 2;
     console.log(halfLength);
     var table = jQuery('<table></table>').addClass('model-answer');
-    table.append("<th>Model</th><th>Value</th>"); 
+    table.append("<th>Model</th><th>Is this a car?</th>");
     for(i=0; i < arrLength; i+=2){
+        if(i==arrLength-2)
+        var row = jQuery("<tr><td><b>" + arrOfData[i] +"</b></td> <td><b>" + arrOfData[i+1]  + "</b></td></tr>");
+        else
         var row = jQuery("<tr><td>" + arrOfData[i] +"</td> <td>" + arrOfData[i+1]  + "</td></tr>");
         table.append(row);
     }

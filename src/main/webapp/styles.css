@@ -97,8 +97,8 @@ input[type="file"] {
 }
 
 #answer img{
-  height: 260px;
-  width: 340px;
+  height: 264px;
+  width: 350px;
   float: left;
   margin-bottom: 4px;
 }
@@ -121,3 +121,9 @@ td, th {
     padding: 8px;
 }
 
+th {
+    font-size: 18px;
+}
+table tr:last-child {
+    font-weight: bold;
+}

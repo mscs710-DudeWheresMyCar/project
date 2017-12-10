@@ -91,7 +91,7 @@ public class BMConnObject
      *
      * Get the authentication string in JSON format
      *
-     * @return: String authString
+     * @return: String authStr
      */
     public String getAuthString()
     {
@@ -115,7 +115,7 @@ public class BMConnObject
      *
      * @param: String JSON String authStr
      *
-     * @return: JsonObject credentials
+     * @return: Map Object map
      *
      */
     public Map<String,String> getCredentials(String authStr)
@@ -144,7 +144,9 @@ public class BMConnObject
      * @return: OSClientV3 os connection object*/
     public OSClientV3 connectionObject()
     {
-        //String project = credentials.get("project").toString().replaceAll("\"", ""); // make sure we have string without quotes (original)
+        //We can fix quotes in the string like this
+        //String project = credentials.get("project").toString().replaceAll("\"", "");
+
         String	authStr = this.getAuthString();
         Map<String, String> credentials = this.getCredentials(authStr);
 
@@ -180,7 +182,14 @@ public class BMConnObject
     }
 
     /**
-     * get bytes to recreate image to store it in data object
+     * processImage
+     *
+     * This function saves the image to the data object
+     *
+     * @param: imageByteArr
+     * @param: fileName
+     *
+     * @return: String
      */
     public String processImage(byte [] imageByteArr, String fileName){
         ByteArrayInputStream bis = new ByteArrayInputStream(imageByteArr);
@@ -193,15 +202,20 @@ public class BMConnObject
         }
         List<? extends SwiftContainer> containers = os.objectStorage().containers().list();
         Iterator<? extends SwiftContainer> it = containers.iterator();
+        //If Mike is reading this comment this is a clear case of "Technical Debt" :) gg
+        //I know that we only have one container that is why I am getting next from Iterator (Hey it works!)
         String containerName = it.next().getName();
-
         String etag = os.objectStorage().objects().put(containerName, fileName, Payloads.create(bis));
-
         //@TODO: Check MD5 in the header if object is created successfully
     	return OBJECTURI + fileName;    
     }
 
-    //Testing object data
+    /**
+     * testObjectCon
+     *
+     * Since the connection to data Object can be tricky we need this function for testing connection only.
+     *
+     */
     public String testObjectCon() throws IOException
     {
         //Check for null
@@ -241,7 +255,7 @@ public class BMConnObject
         File fileImg = null;
         this.createImageObject(os, containerName, fileImg);// gg uncomment to test
         /*
-        //Download picture
+        //We can download picture too instead of using references to the data Object. (Not used for this version of the software)
         DLPayload pl = objs.get(1).download();
         File f = new File("car_1.bmp");
         OutputStream os1 = new FileOutputStream(f);
@@ -263,9 +277,19 @@ public class BMConnObject
         os1.close();
         */
         return objectUrl + "/" + containerName + "/" + objs.get(1).getName();
-        //ObjectLocation.create(objs.get(1).getContainerName(), objs.get(1).getName()).getURI();
     }
 
+    /**
+     * createImageObject
+     *
+     * This function creates a local file first than saves it to the data object
+     * This function is uset together with testObjectCon
+     *
+     * @param: OSClientV3 os
+     * @param: String containerName 
+     * @param: File fileImg 
+     *
+     */
     public void createImageObject(OSClientV3 os,String containerName, File fileImg)
     {
         fileImg = new File("C:\\Users\\genti\\Downloads\\cars\\cars\\08143.jpg");
@@ -274,9 +298,4 @@ public class BMConnObject
         //String etag = os.objectStorage().objects().put(containerName, objectName, Payloads.create(fileImg));
         //System.out.println(etag);
     }
-    /*
-    public static void main(String [] args) throws IOException {
-        CarAPI api = new CarAPI();
-        api.testObjectCon();
-    }*/
 }

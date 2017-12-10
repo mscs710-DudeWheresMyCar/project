@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Hello World</title>
+    <title>DudeWheresMyCar</title>
 
     <!-- Bootstrap -->
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
@@ -36,7 +36,7 @@
     	<div id='imageUpload'>
             <div id='imageFile'>
                 <label for="filename" class="filename">Chose Image to upload</label>
-                <input name="filename" id="filename" type="file" onchange="handleFile(this.file)"/></br>
+                <input name="filename" id="filename" type="file" onchange="handleFile()"/></br>
             </div>
             <div id="filemeta">
                 <p class="imgInitial">No file selected</p>
@@ -57,42 +57,14 @@
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script src="antixss.js" type="text/javascript"></script>
-    <script>
-    	//Submit data when enter key is pressed
-        $('#user_name').keydown(function(e) {
-        	var name = $('#user_name').val();
-            if (e.which == 13 && name.length > 0) { //catch Enter key
-                $('#nameInput').hide();
-           		$('#response').html("loading...");
-            	//POST request to API to create a new visitor entry in the database
-                $.ajax({
-                      method: "POST",
-                      url: "./api/visitors",
-                      contentType: "application/json",
-                      data: JSON.stringify({name: name })
-                    })
-                    .done(function(data) {	
-                        $('#response').html(AntiXSS.sanitizeInput(data));
-                        getNames();
-                    });
-                }
-            });
     
-        /*
-    	//Convert image to base64
-        function getBase64(file) {
-        	   var reader = new FileReader();
-        	   reader.readAsDataURL(file);
-        	   reader.onload = function () {
-        	     console.log(reader.result);
-        	   };
-        	   reader.onerror = function (error) {
-        	     //console.log('Error: ', error);
-        	   };
-        	}
-        */
-
-        //CarAPI Rest Call
+    <script>
+        /**
+         * Event handling for REST call
+         * First ajax call saves image to data object
+         * Second ajax call calls the classify class 
+         *
+         */
         $('#sendImg').click(function(e){
         	var file = $('#filename')[0].files[0];
         	var fileName = file.name;
@@ -129,52 +101,7 @@
      	   	};
         });
 
-       /* 
-        //Retreive all the visitors from the database
-        function getNames(){
-          $.get("./api/visitors")
-              .done(function(data) {
-                  if(data.length > 0) {
-                    data.forEach(function(element, index) {
-                      //data[index] = AntiXSS.sanitizeInput(element) // original
-                      data[index] = element // gg deleted AntiXSS
-                    });
-                    //$('#databaseNames').html("Database contents: " + JSON.stringify(data));// gg original
-                    $('#testDbConnection').html("Testing DB Connection... " + "DB Connection...Success");
-                  }
-                  else
-                  {
-                	  $('#testDbConnection').html("Testing DB Connection... " + "DBConnection...Failed");
-                  }
-              });
-          }
-        */
-
-      //Retreive all the visitors from the database
-        function getCars(){
-          $.get("./api/getCar")
-              .done(function(data) {
-                  console.log('I am here now');
-                  console.log(data);
-                  /*
-                  if(data.length > 0) {
-                    data.forEach(function(element, index) {
-                      //data[index] = AntiXSS.sanitizeInput(element) // original
-                      data[index] = element // gg deleted AntiXSS
-                    });
-                    //$('#databaseNames').html("Database contents: " + JSON.stringify(data));// gg original
-                    $('#testCars').html("Testing Cars: " + JSON.stringify(data));// gg original
-                    $('#testDbConnection').html("Testing DB Connection... " + "DB Connection...Success");
-                  }
-                  else
-                  {
-                      $('#testDbConnection').html("Testing DB Connection... " + "DBConnection...Failed");
-                  }
-                  */
-              });
-          }
-          //getCars();
-      </script>
+     </script>
 </body>
 
 </html>

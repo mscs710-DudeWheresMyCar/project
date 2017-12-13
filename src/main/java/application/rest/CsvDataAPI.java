@@ -335,7 +335,12 @@ public class CsvDataAPI {
 
 
 
+    /**
+     * Returns first 100 lines of csv file
+     * with comma at end
 
+     * @return   A String containing first 100 lines of csv file being used for classifiers
+     */
     @RequestMapping("/csv/read")
     public String readCsv() throws IOException {
         //String filename="cars.csv";

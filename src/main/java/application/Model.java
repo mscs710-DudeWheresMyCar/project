@@ -46,28 +46,23 @@ public class Model {
 
     
     Gson gson = new Gson();
+    /**
+     * REST takes an incoming URL and calls isPhotoACar passing that url
 
+     * @param photoUrl    The URL of a photo to be classified
+     * @return            A string of classifier values to be parsed by front-end
+     */
     @RequestMapping("/classify")
     public String photoClassifyApi(@RequestParam(value="url") String photoUrl)
     {
         return isPhotoACar(photoUrl);
     }
 
-    @RequestMapping("/classifytest")
-    public String photoClassifyApiTest() {
-        String output="";
-        String url;
-        for(int x=10;x<100;x++)
-        {
-            url="https://dal.objectstorage.open.softlayer.com/v1/AUTH_d80c340568a44039847b6e7887bbdd93/DefaultProjectthomasginader1maristedu/000"+x+".jpg";
-            output+="<br><img src=\""+url+"\"><br>";
-            output+=isPhotoACar(url).replaceAll("\n","<br>");
-        }
 
-        return output;
-
-    }
-
+    /**
+     * Used for testing purposes only, classifies one hardcoded image
+e
+     */
     public static void main(String args[])
     {
        Model m = new Model();
@@ -278,7 +273,14 @@ public class Model {
         }
 
     }
+    /**
+     * Uses cross validation to determine the accuracy of a particular classifier
+     * against the static instances data
 
+     * @param classifier  The classifier to be validated
+     * @param sections    The dimension of square grid to interpret photo
+     * @return            accuracy value between 0-100
+     */
     private double checkAccuracy(Classifier classifier,int sections)
     {
         if (classifier==null)
@@ -325,6 +327,11 @@ public class Model {
         }
     }
 
+    /**
+     * Rebuilds classifiers based on an inputCSV
+     * @param sourceCSV   a CSV file used to retrain the classifiers
+     * @return            A string indicating whether or not models were successfully rebuilt
+     */
     @RequestMapping("/rebuild")
     public static String buildClassifiers(String sourceCSV)
     {

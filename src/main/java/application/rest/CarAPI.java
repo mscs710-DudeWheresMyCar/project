@@ -40,6 +40,7 @@ public class CarAPI extends Application {
     BMConnObject cap = new BMConnObject();
     /**
      * getCar
+     * Note: This function does not work for this version of the software
      * @TODO: Call this API with an String arg representing file name for the image to be returned
      */
     @RequestMapping(value = "/api/getCar", method = RequestMethod.GET)
@@ -57,8 +58,10 @@ public class CarAPI extends Application {
      *
      * This is the REST API function for POST data
      * We save the image to the data Object 
-     * @param Car Object, the new car to create.
-     * @return String, The hash of the image stored in the data Object after it has been stored or empty.
+     * 
+     * @param: Car Object, the new car to create.
+     * 
+     * @return: String, The hash of the image stored in the data Object after it has been stored or empty.
      */
     @RequestMapping(value = "/api/postCar", method = RequestMethod.POST)
     public String postCar(@RequestBody Car car) {
@@ -74,5 +77,4 @@ public class CarAPI extends Application {
         //@TODO: return useful information. This is just for testing
         return answer;
     }
-
 }

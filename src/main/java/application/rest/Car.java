@@ -16,45 +16,34 @@
 package application.rest;
 
 /**
- * Represents a Visitor document stored in Cloudant.
+ * Represents a Car document stored in Cloudant.
  */
 
 public class Car {
 	public String imgData;
 	public String fileName;
 	/**
-	 * Gets the visitorName of the document.
+	 * Gets the file name for the Car image.
 	 * 
-	 * @return The name of the document.
+	 * @return: fileName
 	 */
 	public String getFileName() {
 		return fileName;
 	}
 	
 	/**
-	 * Gets the visitorName of the document.
+	 * Gets the Car base64 data.
 	 * 
-	 * @return The name of the document.
+	 * @return Base64 Car data.
 	 */
 	public String getImgData() {
 		return imgData;
 	}
 
 	/**
-	 * Sets the name
+	 * Sets the name for the Car image
 	 * 
-	 * @param name
-	 *            The visitorName to set.
-	 */
-	public void setImgDataName(String imgDataName) {
-		this.imgData = imgDataName;
-	}
-
-	/**
-	 * Sets the name
-	 * 
-	 * @param name
-	 *            The fileName to set.
+	 * @param fileName
 	 */
 	public void setFileName(String fileName) {
 		this.fileName = fileName;

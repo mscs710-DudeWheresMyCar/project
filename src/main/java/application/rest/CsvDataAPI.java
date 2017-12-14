@@ -161,14 +161,15 @@ public class CsvDataAPI {
     }
 
     /**
-     * Used for testing. Creates cars.csv from /cars and /noncars with a 10 x 10 grid
+     * Used to build csv file locally of cars to be used for model data in web app
+     *
+     * Uses hardcoded image paths and hardcoded sections value of 10
      */
     public static void main(String args[])
     {
 
-        //createCSVFromDirectories("E:\\images\\cars_full","E:\\images\\noncars_full","cars.csv",10);
-        imageToRowFromLinks("https://dal.objectstorage.open.softlayer.com/v1/AUTH_d80c340568a44039847b6e7887bbdd93/DefaultProjectthomasginader1maristedu/00010.jpg", 10);
-        System.out.println("done");
+        createCSVFromDirectories("C:\\images\\cars","C:\\images\\noncars","cars.csv",10);
+          System.out.println("done");
     }
 
     /**
@@ -331,46 +332,15 @@ public class CsvDataAPI {
 
     }
 
+
+
+
     /**
-     * Used for testing. Creates cars.csv from /cars and /noncars with a 10 x 10 grid
+     * Returns first 100 lines of csv file
+     * with comma at end
+
+     * @return   A String containing first 100 lines of csv file being used for classifiers
      */
-    /*public static void main(String args[]) throws IOException {
-
-        createCSVFromDirectories("https://dal.objectstorage.open.softlayer.com/v1/AUTH_d80c340568a44039847b6e7887bbdd93/DefaultProjectthomasginader1maristedu/00010.jpg","https://images-na.ssl-images-amazon.com/images/I/91-850we8RL._SL1500_.jpg","cars.csv",10);
-        FileReader fr = new FileReader("cars.csv");
-        BufferedReader br = new BufferedReader(fr);
-
-        String line = br.readLine() + "\n";
-        String outputText = line;
-        while (line != null){
-            line = br.readLine();
-            if(line != null)
-                outputText += line + "\n";
-        }
-
-
-        System.out.println(outputText);
-    }*/
-
-    @RequestMapping("/csv/create")
-    public String runApi() throws IOException {
-        createCSVFromLinks("https://dal.objectstorage.open.softlayer.com/v1/AUTH_d80c340568a44039847b6e7887bbdd93/DefaultProjectthomasginader1maristedu/00010.jpg","https://images-na.ssl-images-amazon.com/images/I/91-850we8RL._SL1500_.jpg","cars.csv",10);
-
-        FileReader fr = new FileReader("cars.csv");
-        BufferedReader br = new BufferedReader(fr);
-
-        String line = br.readLine() + "\n";
-        String outputText = line;
-        while (line != null){
-            line = br.readLine();
-            if(line != null)
-                outputText += line + "\n";
-        }
-
-
-        return outputText;
-    }
-
     @RequestMapping("/csv/read")
     public String readCsv() throws IOException {
         //String filename="cars.csv";
@@ -398,6 +368,7 @@ public class CsvDataAPI {
 
         return outputText;
     }
+
 
     @RequestMapping("/csv/download")
     public String downloadAndReadCsv() throws IOException {
@@ -434,6 +405,16 @@ public class CsvDataAPI {
 
         return outputText;
     }
+    /**
+     * addPixelizedToFileName
+     *
+     * Modifies the filename of a fully qualified filepath, adding pixelized after the last /
+
+     * @param filename the filename to be modified
+     * @return that same filename but with the string pixelized added following the last /
+     *
+
+     */
     public static String addPixelizedToFileName(String filename)
     {
         //first pick up the portion of the filename dropping the url and add pixelized before it

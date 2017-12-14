@@ -46,42 +46,23 @@ public class Model {
 
     
     Gson gson = new Gson();
+    /**
+     * REST takes an incoming URL and calls isPhotoACar passing that url
 
+     * @param photoUrl    The URL of a photo to be classified
+     * @return            A string of classifier values to be parsed by front-end
+     */
     @RequestMapping("/classify")
     public String photoClassifyApi(@RequestParam(value="url") String photoUrl)
     {
         return isPhotoACar(photoUrl);
     }
 
-    @RequestMapping("/classifytest")
-    public String photoClassifyApiTest() {
-        String output="";
-        String url;
-        for(int x=10;x<100;x++)
-        {
-            url="https://dal.objectstorage.open.softlayer.com/v1/AUTH_d80c340568a44039847b6e7887bbdd93/DefaultProjectthomasginader1maristedu/000"+x+".jpg";
-            output+="<br><img src=\""+url+"\"><br>";
-            output+=isPhotoACar(url).replaceAll("\n","<br>");
-        }
 
-        return output;
-
-    }
-
-
-
-    @RequestMapping("/model")
-    public String photoCarApi(@RequestParam(value="url") String photoUrl){
-        String result = "";
-
-        buildClassifiers("cars.csv");
-        result = ""+checkAccuracy(NaiveBayesClassifier,10);
-        double boolResult =  isPhotoACar(NaiveBayesClassifier,photoUrl,10);
-        result += boolResult==1;
-
-
-        return result;
-    }
+    /**
+     * Used for testing purposes only, classifies one hardcoded image
+e
+     */
     public static void main(String args[])
     {
        Model m = new Model();
@@ -91,14 +72,25 @@ public class Model {
 
 
     }
+    /**
+     *isPhotoACar
+     *
+     * This method assumes use of 10 sections and the 5 static classifiers
+     * It builds an Instance of the input image
+     * It then calls specific isPhotoACar methods for each of these classifiers
+     *
+     * @param filename the url of the photo to be classified
+     * @return String, The location of the output jpeg, followed by comma seperates classifier,returnvalue
+     */
     public String isPhotoACar(String filename)
     {
         if (filename==null)
             return "Error couldn't read input image";
+        Instance ins=instanceFromImage(filename,10);
         String output="";
         int stackTrue=0;
         int stackFalse=0;
-        double nbRes=isPhotoACar(NaiveBayesClassifier,filename,10);
+        double nbRes=isPhotoACar(NaiveBayesClassifier,ins);
         if(nbRes==-1)
             output+="NaiveBayes,Unavailable,";
         else if(nbRes==0) {
@@ -114,7 +106,7 @@ public class Model {
 
 
 
-        double rfRes=isPhotoACar(RandomForestClassifier,filename,10);
+        double rfRes=isPhotoACar(RandomForestClassifier,ins);
         if(rfRes==-1)
             output+="RandomForest,Unavailable,";
         else if(rfRes==0) {
@@ -130,7 +122,7 @@ public class Model {
 
 
 
-        double j48Res=isPhotoACar(J48Classifier,filename,10);
+        double j48Res=isPhotoACar(J48Classifier,ins);
         if(j48Res==-1)
             output+="J48,Unavailable,";
         else if(j48Res==0) {
@@ -146,7 +138,8 @@ public class Model {
 
 
 
-        double dtRes=isPhotoACar(DecisionTableClassifier,filename,10);
+
+        double dtRes=isPhotoACar(DecisionTableClassifier,ins);
         if(dtRes==-1)
             output+="DecisionTable,Unavailable,";
         else if(dtRes==0) {
@@ -162,7 +155,7 @@ public class Model {
 
 
 
-        double loRes=isPhotoACar(LogisticClassifier,filename,10);
+        double loRes=isPhotoACar(LogisticClassifier,ins);
         if(loRes==-1)
             output+="Logistic,Unavailable,";
         else if(loRes==0) {
@@ -192,15 +185,25 @@ public class Model {
 
 
     }
+    /**
+     *isPhotoACar
+     *
+     * This method to be called by more generic isPhotoACar for one classifier and instance
 
-    public double isPhotoACar(Classifier classifier,String filename,int sections)
+     *
+     * @param classifier  the classifier for which to evaluate the instance
+     * @param ins the instance representing one row of data (the value from one specific car)
+     *
+     * @return double, -1= unavailable, -3= null instance,0=true, 1=false
+     */
+    private double isPhotoACar(Classifier classifier,Instance ins)
     {
         if(classifier==null)
         {
             return -1;
         }
 
-        Instance ins = instanceFromImage(filename,sections);
+
         double result=-1;
         try {
             if (ins==null) {
@@ -219,7 +222,14 @@ public class Model {
         return result;
 
     }
+    /**
+     *checkAccuracy
+     *
+     * This method calls checkAccuracy for each of the 5 static classifiers
 
+
+     * @return String, text indicating the accuracy of each classifier
+     */
     @RequestMapping("/accuracy")
     public String checkAccuracy()
     {
@@ -263,8 +273,15 @@ public class Model {
         }
 
     }
+    /**
+     * Uses cross validation to determine the accuracy of a particular classifier
+     * against the static instances data
 
-    public double checkAccuracy(Classifier classifier,int sections)
+     * @param classifier  The classifier to be validated
+     * @param sections    The dimension of square grid to interpret photo
+     * @return            accuracy value between 0-100
+     */
+    private double checkAccuracy(Classifier classifier,int sections)
     {
         if (classifier==null)
             return -1;
@@ -310,6 +327,11 @@ public class Model {
         }
     }
 
+    /**
+     * Rebuilds classifiers based on an inputCSV
+     * @param sourceCSV   a CSV file used to retrain the classifiers
+     * @return            A string indicating whether or not models were successfully rebuilt
+     */
     @RequestMapping("/rebuild")
     public static String buildClassifiers(String sourceCSV)
     {
@@ -370,6 +392,17 @@ public class Model {
     }
 
 
+    /**
+     *instanceFromImage
+     *
+     * This method creates an Instance of the input image appending it to the data Instances
+
+     *
+     * @param filename the filename or url pf the photo for which to classify
+     * @param sections the number of sections to divide each dimension
+     *
+     * @return double, -1= unavailable, -3= null instance,0=true, 1=false
+     */
     public Instance instanceFromImage(String filename,int sections)
     {
         Instance ins = new DenseInstance((sections*sections*3)+1);
